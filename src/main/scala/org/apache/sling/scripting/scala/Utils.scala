@@ -46,7 +46,7 @@ object Utils {
   /**
    * Converts a value into an Option.
    * @param value
-   * @returns <code>Some(value)</code> if value is not <code>null</code>,
+   * @return <code>Some(value)</code> if value is not <code>null</code>,
    * <code>None</code> otherwise.
    */
   def option[T](value: T): Option[T] =
@@ -62,7 +62,7 @@ object Utils {
     if (!Character.isJavaIdentifierStart(identifier.charAt(0))) 
       id.append('_');
     
-    for (val ch <- identifier) {
+    for (ch <- identifier) {
       if (Character.isJavaIdentifierPart(ch) && ch != '_') id.append(ch)
       else if (ch == '.') id.append('_')
       else id.append(mangleChar(ch))

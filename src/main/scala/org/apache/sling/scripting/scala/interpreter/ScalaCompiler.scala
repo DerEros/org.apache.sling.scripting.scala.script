@@ -16,11 +16,11 @@
  */
 package org.apache.sling.scripting.scala.interpreter
 
-import scala.tools.nsc.{Settings, Global}
+import scala.tools.nsc.classpath.{AggregateClassPath, DirectoryClassPath}
 import scala.tools.nsc.io.AbstractFile
 import scala.tools.nsc.reporters.Reporter
-import scala.tools.nsc.util.{ClassPath, MergedClassPath, DirectoryClassPath}
-import tools.nsc.backend.JavaPlatform
+import scala.tools.nsc.util.ClassPath
+import scala.tools.nsc.{Global, Settings}
 
 /**
  * Extended Scala compiler which supports a class path with {@link AbstractFile} entries.
@@ -29,15 +29,12 @@ import tools.nsc.backend.JavaPlatform
 class ScalaCompiler(settings: Settings, reporter: Reporter, classes: Array[AbstractFile])
   extends Global(settings, reporter) {
 
-  override lazy val classPath: ClassPath[AbstractFile] = {
-    val classPathOrig = platform match {
-      case p: JavaPlatform => p.classPath
-      case _ =>  throw new InterpreterException("Only JVM target supported")
-    }
+  override def classPath: ClassPath = {
+    val classPathOrig = super.classPath
 
-    val classPathNew = classes.map(c => new DirectoryClassPath(c, classPathOrig.context))
-    new MergedClassPath[AbstractFile](classPathOrig :: classPathNew.toList, classPathOrig.context)
+    val classPathNew = classPathOrig :: classes.map(c => DirectoryClassPath( c.file ) ).toList
+    AggregateClassPath.createAggregate(classPathNew:_*)
   }
 
-  override def rootLoader: LazyType = new loaders.JavaPackageLoader(classPath)
+//  override def rootLoader: LazyType = new loaders.PackageLoader(ClassPath.RootPackage, classPath)
 }

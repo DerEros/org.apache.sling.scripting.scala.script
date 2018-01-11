@@ -33,12 +33,12 @@ abstract class AbstractScriptInfo(protected var defaultScriptClass: String) exte
   }
   
   /**
-   * @return  {@link #DEFAULT_SCALA_SCRIPT_CLASS}
+   * @return  {@see #DEFAULT_SCALA_SCRIPT_CLASS}
    */
   def getDefaultScriptClass = defaultScriptClass
                  
   /**
-   * @return  the value of the {@link AbstractScriptInfo.SCALA_SCRIPT_CLASS} attribute
+   * @return  the value of the {@see AbstractScriptInfo.SCALA_SCRIPT_CLASS} attribute
    *   in the <code>context</code>. 
    */
   @throws(classOf[ScriptException])

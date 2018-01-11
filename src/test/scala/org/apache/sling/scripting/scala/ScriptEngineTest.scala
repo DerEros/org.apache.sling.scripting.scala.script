@@ -52,26 +52,26 @@ class ScriptEngineTest extends TestCase {
    */
   def testSimple() {
 
-    val scriptEngine: ScriptEngine = getScriptEngine();
+    val scriptEngine: ScriptEngine = getScriptEngine()
 
-    var code = new StringBuilder();
-    code.append("package org.apache.sling.scripting.scala{");
-    code.append("\n");
-    code.append("class Script(args: ScriptArgs) {");
-    code.append("\n");
-    code.append("import args._");
-    code.append("\n");
-    code.append("println(\"output:\" + obj.saySomething()) ");
-    code.append("\n");
-    code.append("}}");
+    var code = new StringBuilder()
+    code.append("package org.apache.sling.scripting.scala{")
+    code.append("\n")
+    code.append("class Script(args: ScriptArgs) {")
+    code.append("\n")
+    code.append("import args._")
+    code.append("\n")
+    code.append("println(\"output:\" + obj.saySomething()) ")
+    code.append("\n")
+    code.append("}}")
 
-    val say = "hello";
+    val say = "hello"
 
-    val b = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
-    b.put("obj", new TestInject(say));
+    val b = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE)
+    b.put("obj", new TestInject(say))
 
-    val writer = new StringWriter();
-    scriptEngine.getContext().setWriter(writer);
+    val writer = new StringWriter()
+    scriptEngine.getContext().setWriter(writer)
 
     scriptEngine.eval(code.toString(), b)
     assertEquals("output:" + say, writer.toString.trim())

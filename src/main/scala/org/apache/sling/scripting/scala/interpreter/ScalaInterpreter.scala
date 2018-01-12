@@ -19,10 +19,12 @@ package org.apache.sling.scripting.scala.interpreter
 import scala.tools.nsc.interpreter.AbstractFileClassLoader
 import scala.tools.nsc.io.AbstractFile
 import scala.tools.nsc.reporters.Reporter
-import scala.tools.nsc.util.{SourceFile, BatchSourceFile}
-import scala.tools.nsc.{FatalError, Settings, Global}
+import scala.tools.nsc.util.{BatchSourceFile, SourceFile}
+import scala.tools.nsc.{FatalError, Global, Settings}
 import java.io.{InputStream, OutputStream}
+
 import org.apache.sling.scripting.scala.Utils.option
+import org.slf4s.Logging
 
 /**
  * An interpreter for Scala scripts. Interpretation of scripts proceeds in the following steps:
@@ -36,7 +38,7 @@ import org.apache.sling.scripting.scala.Utils.option
  * @param reporter  reporter for compilation
  * @param classes  additional classes for the classpath
  */
-class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[AbstractFile]) {
+class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[AbstractFile]) extends Logging {
 
   /**
    * Same as <code>ScalaInterpreter(settings, reporter, null, outDir)</code>.
@@ -282,11 +284,11 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
     try {
       val classLoader = new AbstractFileClassLoader(outputDir, parentClassLoader)
       val script = classLoader.loadClass(name + "Runner")
-      val initMethod = (script
+      val initMethod = script
         .getDeclaredMethods
         .toList
         .find(method => method.getName == "main")
-        .get)
+        .get
 
       initMethod.invoke(null, Array(bindings, in.getOrElse(java.lang.System.in),
                                               out.getOrElse(java.lang.System.out)): _*)

@@ -96,6 +96,9 @@
               *
             </Import-Package>
             <DynamicImport-Package>*</DynamicImport-Package>
+            <Bundle-Activator>de.erna.ScriptingBundleActivator</Bundle-Activator>
+            <Embed-Dependency>slf4s-api_${scala-major.version}</Embed-Dependency>
+            <Embed-Transitive>true</Embed-Transitive>
             <Service-Component>OSGI-INF/serviceComponents.xml</Service-Component>
           </instructions>
         </configuration>

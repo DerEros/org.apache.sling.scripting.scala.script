@@ -16,6 +16,8 @@
  */
 package org.apache.sling.scripting.scala.interpreter
 
+import org.slf4s.Logging
+
 import scala.tools.nsc.classpath.{AggregateClassPath, DirectoryClassPath}
 import scala.tools.nsc.io.AbstractFile
 import scala.tools.nsc.reporters.Reporter
@@ -27,13 +29,18 @@ import scala.tools.nsc.{Global, Settings}
  * Note: this implementation does not support MSIL (.NET).
  */
 class ScalaCompiler(settings: Settings, reporter: Reporter, classes: Array[AbstractFile])
-  extends Global(settings, reporter) {
+  extends Global(settings, reporter) with Logging {
+  log.info(s"Classes: ${classes.map(c => c.canonicalPath).mkString(",")}")
 
   override def classPath: ClassPath = {
     val classPathOrig = super.classPath
+    log.info(s"Original class path: ${classPathOrig.asClassPathString}")
 
     val classPathNew = classPathOrig :: classes.map(c => DirectoryClassPath( c.file ) ).toList
-    AggregateClassPath.createAggregate(classPathNew:_*)
+    val aggregatedClassPath = AggregateClassPath.createAggregate(classPathNew:_*)
+    log.info(s"New class path: ${aggregatedClassPath.asClassPathString}")
+
+    aggregatedClassPath
   }
 
 //  override def rootLoader: LazyType = new loaders.PackageLoader(ClassPath.RootPackage, classPath)

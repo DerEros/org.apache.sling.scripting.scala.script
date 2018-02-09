@@ -59,7 +59,7 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
   private var settingsProvider: SettingsProvider = 
     new AbstractSettingsProvider{}
   
-  private var scalaInterpreter: ScalaInterpreter = null;
+  private var scalaInterpreter: ScalaInterpreter = _
 
   // -----------------------------------------------------< ScriptEngineFactory >---
   

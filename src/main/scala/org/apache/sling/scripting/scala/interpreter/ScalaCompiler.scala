@@ -45,7 +45,7 @@ class ScalaCompiler(settings: Settings, reporter: Reporter, classes: Array[Abstr
       "/home/anony/.m2/repository/de/erna/osgi-scala-scripting/0.1.0-SNAPSHOT/osgi-scala-scripting-0.1.0-SNAPSHOT.jar" :: Nil
     val jars = for (jarPath <- scalaJars) yield ZipAndJarClassPathFactory.create(AbstractFile.getFile(jarPath), new Settings() )
 
-    val classPathNew = classPathOrig ++ classes.map(c => new AbstractFileClassPath( c ) ).toList ++ jars
+    val classPathNew = classPathOrig ++ classes.map(c => new AbstractFileClassPath( c ) ).toList //++ jars
     val aggregatedClassPath = AggregateClassPath.createAggregate(classPathNew.reverse:_*)
 
     aggregatedClassPath

@@ -2,47 +2,74 @@ package scala.tools.nsc.custom
 
 import java.net.URL
 
+import org.apache.sling.scripting.scala.bundlefs.{BundleEntry, DirEntry, FileEntry}
+import org.osgi.framework.Bundle
 import org.slf4s.Logging
 
-import scala.tools.nsc.classpath.{ClassFileEntry, ClassPathEntries}
+import scala.tools.nsc.classpath.{ClassFileEntryImpl, ClassPathEntries, PackageEntryImpl}
 import scala.tools.nsc.io.AbstractFile
-import scala.tools.nsc.util.{ClassPath, ClassRepresentation}
+import scala.tools.nsc.util.ClassPath
 
-class AbstractFileClassPath(classFile: AbstractFile) extends ClassPath with Logging {
-  val className: String = {
-    val i = classFile.name.lastIndexOf(".")
-    classFile.name.substring(0, i)
+class AbstractFileClassPath(abstractFile: AbstractFile) extends ClassPath with Logging {
+  val bundle: Option[Bundle] = abstractFile match {
+    case e: BundleEntry => Some(e.bundle)
+    case _ => None
   }
-  val fullName = classFile.toString()
+
+  val bundleName: Option[String] = bundle.map(_.getSymbolicName)
+  val bundleVersion: Option[String] = bundle.map(_.getVersion.toString)
+  val bundleString: Option[String] = for (name <- bundleName; version <- bundleVersion) yield s"$name ($version)"
 
   override private[nsc] def hasPackage( pkg: String ) = false
 
   override private[nsc] def packages( inPackage: String ) = Seq()
 
-  override private[nsc] def classes( inPackage: String ) = Seq(new ClassFileEntry {
-    override def file: AbstractFile = classFile
-    override def source: Option[ AbstractFile ] = None
-    override def binary: Option[ AbstractFile ] = Some(classFile)
-    override def name: String = fullName
-  })
-
+  override private[nsc] def classes( inPackage: String ) = {
+    log.info(s"Looking for classes in $inPackage")
+    Seq()
+  }
 
   override private[nsc] def sources( inPackage: String ) = Seq()
 
+
   override private[ nsc ] def list( inPackage: String ) = {
-    ClassPathEntries(Seq(), Seq(new ClassRepresentation {
-      override def source: Option[ AbstractFile ] = None
-      override def binary: Option[ AbstractFile ] = Some(classFile)
-      override def name: String = fullName
-    }))
+    log.info(s"Listing $inPackage ${bundleString.map("in " + _).getOrElse("")}")
+
+    val path = inPackage.replaceAll("\\.", "/")
+    abstractFile.lookupName(path, directory = true ) match {
+      case dirEntry: DirEntry => {
+        log.info(s"Found $inPackage in ${abstractFile.name}")
+        list(inPackage, dirEntry)
+      }
+      case _ => ClassPathEntries(Seq(), Seq())
+    }
   }
 
-  override def asURLs: Seq[ URL ] = Seq( classFile.toURL )
+  def list( inPackage: String, dirEntry: DirEntry ) = {
+    val prefix = if (inPackage.isEmpty) "" else s"$inPackage."
+    val all = dirEntry.toList
+    val packages = dirEntry.filter(_.isClassContainer).map(f => PackageEntryImpl(s"$prefix${f.name}"))
+    val classes = dirEntry.filter(!_.isDirectory).map(ClassFileEntryImpl )
 
-  override def findClassFile( className: String ): Option[ AbstractFile ] =
-    if (className == this.className) Some(classFile) else None
+    if (packages.nonEmpty || classes.nonEmpty) {
+      log.info(s"Found ${bundleString.map("in " + _).getOrElse("")}: ${packages.mkString(", ")}; ${classes.mkString(", ")}")
+    }
 
-  override def asClassPathStrings: Seq[ String ] = Seq( classFile.path )
+    ClassPathEntries(packages.toSeq, classes.toSeq)
+  }
+
+  override def asURLs: Seq[ URL ] = Seq( abstractFile.toURL )
+
+  override def findClassFile( className: String ): Option[ AbstractFile ] = {
+    log.info(s"Looking for class $className")
+    None
+  }
+
+
+  override def asClassPathStrings: Seq[ String ] = {
+    log.info("Getting class path strings")
+    Seq()
+  }
 
   override def asSourcePathString: String = ""
 }

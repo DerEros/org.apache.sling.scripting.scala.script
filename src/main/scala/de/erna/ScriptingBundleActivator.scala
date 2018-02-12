@@ -3,8 +3,9 @@ package de.erna
 import java.io.StringWriter
 import javax.script.{ScriptContext, ScriptEngine, ScriptEngineFactory}
 
-import org.apache.sling.scripting.scala.{BundleFS, ScalaScriptEngineFactory}
+import org.apache.sling.scripting.scala.ScalaScriptEngineFactory
 import org.apache.sling.scripting.scala.ScalaScriptEngineFactory.SCALA_CLASSPATH_X
+import org.apache.sling.scripting.scala.bundlefs.BundleFS
 import org.osgi.framework.wiring.BundleWiring
 import org.osgi.framework.{Bundle, BundleActivator, BundleContext}
 import org.slf4s.Logging
@@ -43,18 +44,19 @@ class ScriptingBundleActivator extends BundleActivator with Logging {
 
     val fs = BundleFS.create(bundleContext.getBundle)
     val wiring = bundleContext.getBundle.adapt(classOf[BundleWiring])
-    val classes = wiring.listResources("/", "*.class", BundleWiring.LISTRESOURCES_RECURSE)
-    val all = wiring.listResources("/", "*", BundleWiring.LISTRESOURCES_RECURSE)
+//    val classes = wiring.listResources("/", "*", BundleWiring.LISTRESOURCES_RECURSE)
 
     val bundles = getWiredBundles(bundleContext).reverse
 
-    val abstractFileOptions = for (cl <- classes.asScala) yield {
-      val containingBundle = findBundleForResource(cl, bundles)
-      for (bundle <- containingBundle) yield {
-        getFileForClass(cl, bundle)
-      }
-    }
-    val abstractFiles = abstractFileOptions.filter(_.isDefined).map(_.get)
+//    val abstractFileOptions = for (cl <- classes.asScala) yield {
+//      val containingBundle = findBundleForResource(cl, bundles)
+//      for (bundle <- containingBundle) yield {
+//        getFileForClass(cl, bundle)
+//      }
+//    }
+//    val abstractFiles = abstractFileOptions.filter(_.isDefined).map(_.get)
+
+    val abstractFiles = bundles.filter(_.getResource("/") != null).map(BundleFS.create)
 
     val scriptEngine: ScriptEngine = getScriptEngine()
 

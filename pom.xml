@@ -87,7 +87,7 @@
             <ScriptEngine-Name>${pom.name}</ScriptEngine-Name>
             <ScriptEngine-Version>${pom.version}</ScriptEngine-Version>
             <Export-Package>
-              org.apache.sling.scripting.scala.*,scala.tools.nsc.custom
+              de.erna.scripting.scala.*,scala.tools.nsc.custom
             </Export-Package>
             <Import-Package>
               !javax.swing.*,
@@ -97,7 +97,7 @@
               *
             </Import-Package>
             <DynamicImport-Package>*</DynamicImport-Package>
-            <Bundle-Activator>de.erna.ScriptingBundleActivator</Bundle-Activator>
+            <Bundle-Activator>de.erna.scripting.scala.ScriptingBundleActivator</Bundle-Activator>
             <Embed-Dependency>slf4s-api_${scala-major.version}</Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>
             <Service-Component>OSGI-INF/serviceComponents.xml</Service-Component>

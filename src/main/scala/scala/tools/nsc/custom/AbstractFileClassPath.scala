@@ -2,7 +2,7 @@ package scala.tools.nsc.custom
 
 import java.net.URL
 
-import org.apache.sling.scripting.scala.bundlefs.{BundleEntry, DirEntry, FileEntry}
+import de.erna.scripting.scala.bundlefs.{BundleEntry, DirEntry}
 import org.osgi.framework.Bundle
 import org.slf4s.Logging
 

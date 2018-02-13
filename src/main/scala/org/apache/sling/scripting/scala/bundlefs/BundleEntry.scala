@@ -41,7 +41,7 @@ abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) e
 
   @throws(classOf[IOException])
   def input: InputStream = {
-    log.info(s"Getting stream for $url")
+    log.debug(s"Accessing stream for $url")
     url.openStream()
   }
 

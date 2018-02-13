@@ -58,9 +58,9 @@ object Utils {
    * @return Legal Java/Scala identifier corresponding to the given identifier
    */
   def makeIdentifier(identifier: String) = {
-    val id = new StringBuilder(identifier.length);
+    val id = new StringBuilder(identifier.length)
     if (!Character.isJavaIdentifierStart(identifier.charAt(0))) 
-      id.append('_');
+      id.append('_')
     
     for (ch <- identifier) {
       if (Character.isJavaIdentifierPart(ch) && ch != '_') id.append(ch)

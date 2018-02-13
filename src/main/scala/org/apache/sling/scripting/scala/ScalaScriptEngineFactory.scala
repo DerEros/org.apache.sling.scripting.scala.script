@@ -172,15 +172,15 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
     }
     
     if (scalaInterpreter == null) {
-      log.debug("Creating Scala script engine from settings {}", settingsProvider);
+      log.debug("Creating Scala script engine from settings {}", settingsProvider)
 
         scalaInterpreter = new ScalaInterpreter(
             settingsProvider.getSettings,
             settingsProvider.getReporter,
-            settingsProvider.getClasspathX);
+            settingsProvider.getClasspathX)
     }
 
-    return scalaInterpreter;
+    scalaInterpreter
   }
   
 }

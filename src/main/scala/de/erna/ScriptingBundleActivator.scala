@@ -1,7 +1,7 @@
 package de.erna
 
 import java.io.StringWriter
-import javax.script.{ScriptContext, ScriptEngine, ScriptEngineFactory}
+import javax.script.{ScriptContext, ScriptEngine}
 
 import org.apache.sling.scripting.scala.ScalaScriptEngineFactory
 import org.apache.sling.scripting.scala.ScalaScriptEngineFactory.SCALA_CLASSPATH_X
@@ -10,11 +10,9 @@ import org.osgi.framework.wiring.BundleWiring
 import org.osgi.framework.{Bundle, BundleActivator, BundleContext}
 import org.slf4s.Logging
 
-import scala.tools.nsc.io.AbstractFile
-
 class ScriptingBundleActivator extends BundleActivator with Logging {
   class TestInject(sayWhat: String) {
-    def saySomething() = sayWhat;
+    def saySomething() = sayWhat
   }
 
   def getScriptEngine(): ScriptEngine = {
@@ -26,36 +24,15 @@ class ScriptingBundleActivator extends BundleActivator with Logging {
     bundleContext.getBundles.toList
   }
 
-  def findBundleForResource(resourceName: String, bundles: List[Bundle]): Option[Bundle] = {
-    bundles.find(b => b.getEntry(resourceName) != null)
-  }
-
-  def getFileForClass(className: String, bundle: Bundle): AbstractFile = {
-    val fs = BundleFS.create(bundle)
-    val pathParts = className.split("/")
-    pathParts.foldLeft(fs)((d, sd) => d.lookupName(sd, !sd.endsWith(".class")))
-  }
-
   override def start(bundleContext: BundleContext): Unit = {
     import scala.languageFeature.implicitConversions
-    import scala.collection.JavaConverters._
 
     log.info("Scala Scripting Engine starting")
 
     val fs = BundleFS.create(bundleContext.getBundle)
     val wiring = bundleContext.getBundle.adapt(classOf[BundleWiring])
-//    val classes = wiring.listResources("/", "*", BundleWiring.LISTRESOURCES_RECURSE)
 
     val bundles = getWiredBundles(bundleContext).reverse
-
-//    val abstractFileOptions = for (cl <- classes.asScala) yield {
-//      val containingBundle = findBundleForResource(cl, bundles)
-//      for (bundle <- containingBundle) yield {
-//        getFileForClass(cl, bundle)
-//      }
-//    }
-//    val abstractFiles = abstractFileOptions.filter(_.isDefined).map(_.get)
-
     val abstractFiles = bundles.filter(_.getResource("/") != null).map(BundleFS.create)
 
     val scriptEngine: ScriptEngine = getScriptEngine()

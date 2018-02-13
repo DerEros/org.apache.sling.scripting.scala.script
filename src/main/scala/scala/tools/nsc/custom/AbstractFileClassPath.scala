@@ -25,20 +25,23 @@ class AbstractFileClassPath(abstractFile: AbstractFile) extends ClassPath with L
   override private[nsc] def packages( inPackage: String ) = Seq()
 
   override private[nsc] def classes( inPackage: String ) = {
-    log.info(s"Looking for classes in $inPackage")
+    log.warn(s"Looking for classes in $inPackage - not implemented so not returning anything")
     Seq()
   }
 
-  override private[nsc] def sources( inPackage: String ) = Seq()
+  override private[nsc] def sources( inPackage: String ) = {
+    log.warn(s"Looking for sources in $inPackage - not implemented so not returning anything")
+    Seq()
+  }
 
 
   override private[ nsc ] def list( inPackage: String ) = {
-    log.info(s"Listing $inPackage ${bundleString.map("in " + _).getOrElse("")}")
+    log.trace(s"Listing $inPackage ${bundleString.map("in " + _).getOrElse("")}")
 
     val path = inPackage.replaceAll("\\.", "/")
     abstractFile.lookupName(path, directory = true ) match {
       case dirEntry: DirEntry => {
-        log.info(s"Found $inPackage in ${abstractFile.name}")
+        log.debug(s"Found $inPackage in ${abstractFile.name}")
         list(inPackage, dirEntry)
       }
       case _ => ClassPathEntries(Seq(), Seq())
@@ -52,7 +55,7 @@ class AbstractFileClassPath(abstractFile: AbstractFile) extends ClassPath with L
     val classes = dirEntry.filter(!_.isDirectory).map(ClassFileEntryImpl )
 
     if (packages.nonEmpty || classes.nonEmpty) {
-      log.info(s"Found ${bundleString.map("in " + _).getOrElse("")}: ${packages.mkString(", ")}; ${classes.mkString(", ")}")
+      log.trace(s"Found ${bundleString.map("in " + _).getOrElse("")}: ${packages.mkString(", ")}; ${classes.mkString(", ")}")
     }
 
     ClassPathEntries(packages.toSeq, classes.toSeq)
@@ -61,15 +64,18 @@ class AbstractFileClassPath(abstractFile: AbstractFile) extends ClassPath with L
   override def asURLs: Seq[ URL ] = Seq( abstractFile.toURL )
 
   override def findClassFile( className: String ): Option[ AbstractFile ] = {
-    log.info(s"Looking for class $className")
+    log.warn(s"Looking for class $className - not implemented so not returning anything")
     None
   }
 
 
   override def asClassPathStrings: Seq[ String ] = {
-    log.info("Getting class path strings")
+    log.warn("Getting class path strings - not implemented so not returning anything")
     Seq()
   }
 
-  override def asSourcePathString: String = ""
+  override def asSourcePathString: String = {
+    log.warn("Getting source path as string - not implemented so not returning anything")
+    ""
+  }
 }

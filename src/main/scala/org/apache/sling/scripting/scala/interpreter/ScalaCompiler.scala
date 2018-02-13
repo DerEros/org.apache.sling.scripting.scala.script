@@ -39,17 +39,9 @@ class ScalaCompiler(settings: Settings, reporter: Reporter, classes: Array[Abstr
       case _ => throw new Exception("Class path is not a class of 'ClassPath'")
     }
 
-    val scalaJars = "/home/anony/.m2/repository/org/scala-lang/scala-library/2.12.4/scala-library-2.12.4.jar" ::
-      "/home/anony/.m2/repository/org/scala-lang/scala-compiler/2.12.4/scala-compiler-2.12.4.jar" ::
-      "/home/anony/.m2/repository/org/scala-lang/scala-reflect/2.12.4/scala-reflect-2.12.4.jar" ::
-      "/home/anony/.m2/repository/de/erna/osgi-scala-scripting/0.1.0-SNAPSHOT/osgi-scala-scripting-0.1.0-SNAPSHOT.jar" :: Nil
-    val jars = for (jarPath <- scalaJars) yield ZipAndJarClassPathFactory.create(AbstractFile.getFile(jarPath), new Settings() )
-
-    val classPathNew = classPathOrig ++ classes.map(c => new AbstractFileClassPath( c ) ).toList //++ jars
+    val classPathNew = classPathOrig ++ classes.map(c => new AbstractFileClassPath( c ) ).toList
     val aggregatedClassPath = AggregateClassPath.createAggregate(classPathNew.reverse:_*)
 
     aggregatedClassPath
   }
-
-//  override def rootLoader: LazyType = new loaders.PackageLoader(ClassPath.RootPackage, classPath)
 }

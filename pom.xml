@@ -103,22 +103,15 @@
                         <Bundle-Activator>de.erna.scripting.scala.ScriptingBundleActivator</Bundle-Activator>
                         <Embed-Dependency>slf4s-api_${scala-major.version}</Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
-                        <Service-Component>OSGI-INF/dummyservice.xml,OSGI-INF/scriptenginefactoryservice.xml</Service-Component>
+                        <Service-Component>
+                            OSGI-INF/dummyservice.xml,
+                            OSGI-INF/scriptenginefactoryservice.xml,
+                            OSGI-INF/scalascriptservice.xml
+                        </Service-Component>
                     </instructions>
                 </configuration>
             </plugin>
         </plugins>
-
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-        </testResources>
     </build>
 
     <dependencies>
@@ -142,6 +135,20 @@
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.core</artifactId>
             <version>6.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.service.component</artifactId>
+            <version>1.3.0</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.service.component.annotations</artifactId>
+            <version>1.3.0</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

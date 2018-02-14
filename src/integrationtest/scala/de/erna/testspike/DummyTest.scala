@@ -1,8 +1,10 @@
 package de.erna.testspike
 
 import javax.inject.Inject
+import javax.script.ScriptException
 
 import de.erna.scripting.scala.dummy.DummyService
+import de.erna.scripting.scala.service.ScalaScriptService
 import org.junit.Assert._
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,6 +19,9 @@ class DummyTest {
 
   @Inject
   var service: DummyService = _
+
+  @Inject
+  var scriptService: ScalaScriptService = _
 
   @Configuration
   def config(): Array[ExamOption] = options(

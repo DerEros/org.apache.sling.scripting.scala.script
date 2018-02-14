@@ -100,7 +100,6 @@
             <Bundle-Activator>de.erna.scripting.scala.ScriptingBundleActivator</Bundle-Activator>
             <Embed-Dependency>slf4s-api_${scala-major.version}</Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>
-            <Service-Component>OSGI-INF/serviceComponents.xml</Service-Component>
           </instructions>
         </configuration>
       </plugin>

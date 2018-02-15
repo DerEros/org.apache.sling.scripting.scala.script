@@ -6,16 +6,20 @@ import javax.script.ScriptException
 import de.erna.scripting.scala.service.ScalaScriptService
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.ops4j.pax.exam.{Configuration, Option => ExamOption}
 import org.ops4j.pax.exam.CoreOptions.{junitBundles, mavenBundle, options}
 import org.ops4j.pax.exam.junit.PaxExam
 import org.ops4j.pax.exam.spi.reactors.{ExamReactorStrategy, PerMethod}
+import org.ops4j.pax.exam.{Configuration, Constants, ProbeBuilder, TestProbeBuilder, Option => ExamOption}
+import org.osgi.framework.BundleContext
 
 @RunWith(classOf[PaxExam])
 @ExamReactorStrategy(Array(classOf[PerMethod]))
 class ScalaScriptServiceTest {
   @Inject
   var scalaScriptService: ScalaScriptService = _
+
+  @Inject
+  var bc: BundleContext = _
 
   @Configuration
   def config(): Array[ExamOption] = options(
@@ -26,6 +30,10 @@ class ScalaScriptServiceTest {
     mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.0.14"),
     junitBundles())
 
+  @ProbeBuilder
+  def probeConfig(testProbeBuilder: TestProbeBuilder): TestProbeBuilder = {
+    testProbeBuilder.setHeader("Export-Package", "de;version=1.0.0,de.erna;version=1.0.0,de.erna.testspike;version=1.0.0")
+  }
 
   @Test(expected = classOf[ScriptException])
   def testInvalidScript(): Unit = {
@@ -34,24 +42,47 @@ class ScalaScriptServiceTest {
 
   @Test
   def testSimpleScript(): Unit = {
-    class TestInject(sayWhat: String) {
-      def saySomething() = sayWhat
-    }
+    val script =
+      """
+        |package de.erna.scripting.scala {
+        |  class Script(args: ScriptArgs) {
+        |    import args._
+        |
+        |    println("Hello Simple Script!")
+        |  }
+        |}
+      """.stripMargin
 
-    var code = new StringBuilder()
-    code.append("package de.erna.scripting.scala{")
-    code.append("\n")
-    code.append("class Script(args: ScriptArgs) {")
-    code.append("\n")
-    code.append("import args._")
-    code.append("\n")
-    code.append("println(\"output:\" + obj.saySomething()) ")
-    code.append("\n")
-    code.append("}}")
+    scalaScriptService.run(script, Map.empty)
+  }
+
+  @Test
+  def testScriptWithBinding(): Unit = {
+    val script =
+      """
+        |package de.erna.scripting.scala {
+        |
+        |  import de.erna.testspike.TestInject
+        |
+        |  class Script(args: ScriptArgs) {
+        |    import args._
+        |
+        |    println("Hello Script With Binding!")
+        |    println(obj.getClass.getCanonicalName)
+        |    println(obj.asInstanceOf[TestInject].saySomething())
+        |  }
+        |}
+      """.stripMargin
 
     val say = "hello"
     val bindings = Map("obj" -> new TestInject(say))
 
-    scalaScriptService.run(code.toString(), bindings)
+    scalaScriptService.run(script, bindings)
+  }
+
+  @Test
+  def dummy(): Unit = {
+    val names = bc.getBundles.map(_.getSymbolicName)
+    System.out.println(names.mkString(", "))
   }
 }

@@ -54,14 +54,13 @@ class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(b
 
           // If still null OSGi wont let use load that resource for some reason
           if (entryUrl == null) {
-            null
+            entryUrl = new URL(url.toString + entry)
           }
-          else {
-            if (entry.endsWith(".class"))
-              new FileEntry(bundle, entryUrl, DirEntry.this)
-            else
-              new DirEntry(bundle, entryUrl, DirEntry.this)
-          }
+
+          if (entry.endsWith(".class"))
+            new FileEntry(bundle, entryUrl, DirEntry.this)
+          else
+            new DirEntry(bundle, entryUrl, DirEntry.this)
         }
         else
           null

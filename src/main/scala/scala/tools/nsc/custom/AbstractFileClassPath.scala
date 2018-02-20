@@ -20,19 +20,17 @@ class AbstractFileClassPath(abstractFile: AbstractFile) extends ClassPath with L
   val bundleVersion: Option[String] = bundle.map(_.getVersion.toString)
   val bundleString: Option[String] = for (name <- bundleName; version <- bundleVersion) yield s"$name ($version)"
 
-  override private[nsc] def hasPackage( pkg: String ) = false
+  override private[nsc] def hasPackage( pkg: String ) =
+    throw new NotImplementedError(s"Looking for packages $pkg - not implemented")
 
-  override private[nsc] def packages( inPackage: String ) = Seq()
+  override private[nsc] def packages( inPackage: String ) =
+    throw new NotImplementedError(s"Looking for packages in $inPackage - not implemented")
 
-  override private[nsc] def classes( inPackage: String ) = {
-    log.warn(s"Looking for classes in $inPackage - not implemented so not returning anything")
-    Seq()
-  }
+  override private[nsc] def classes( inPackage: String ) =
+    throw new NotImplementedError(s"Looking for classes in $inPackage - not implemented")
 
-  override private[nsc] def sources( inPackage: String ) = {
-    log.warn(s"Looking for sources in $inPackage - not implemented so not returning anything")
-    Seq()
-  }
+  override private[nsc] def sources( inPackage: String ) =
+    throw new NotImplementedError(s"Looking for sources in $inPackage - not implemented")
 
 
   override private[ nsc ] def list( inPackage: String ) = {
@@ -63,19 +61,13 @@ class AbstractFileClassPath(abstractFile: AbstractFile) extends ClassPath with L
 
   override def asURLs: Seq[ URL ] = Seq( abstractFile.toURL )
 
-  override def findClassFile( className: String ): Option[ AbstractFile ] = {
-    log.warn(s"Looking for class $className - not implemented so not returning anything")
-    None
-  }
+  override def findClassFile( className: String ): Option[ AbstractFile ] =
+    throw new NotImplementedError(s"Looking for class $className - not implemented" )
 
 
-  override def asClassPathStrings: Seq[ String ] = {
-    log.warn("Getting class path strings - not implemented so not returning anything")
-    Seq()
-  }
+  override def asClassPathStrings: Seq[ String ] =
+    throw new NotImplementedError("Getting class path strings - not implemented")
 
-  override def asSourcePathString: String = {
-    log.warn("Getting source path as string - not implemented so not returning anything")
-    ""
-  }
+  override def asSourcePathString: String =
+    throw new NotImplementedError("Getting source path as string - not implemented")
 }

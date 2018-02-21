@@ -3,12 +3,11 @@ package de.erna.scripting.scala.bundlefs
 import java.io.{File, IOException, InputStream}
 import java.net.URL
 
-import de.erna.scripting.scala.NonExistingFile
-import de.erna.scripting.scala.NonExistingFile
 import de.erna.scripting.scala.Utils.valueOrElse
 import org.osgi.framework.Bundle
 import org.slf4s.Logging
 
+import scala.reflect.internal.util.NoFile
 import scala.tools.nsc.io.AbstractFile
 
 abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) extends AbstractFile with Logging {
@@ -54,7 +53,7 @@ abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) e
 
   def lookupNameUnchecked(name: String, directory: Boolean) = {
     val file = lookupName(name, directory)
-    if (file == null) NonExistingFile
+    if (file == null) NoFile
     else file
   }
 

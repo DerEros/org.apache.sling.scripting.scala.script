@@ -16,21 +16,22 @@
  */
 package de.erna.scripting.scala
 
-import javax.script.{ ScriptEngineFactory, ScriptEngine, ScriptContext }
 import java.io.StringWriter
-import java.util.concurrent.{ TimeUnit, Executors, Callable, Future }
-import junit.framework.Assert._
-import junit.framework.TestCase
+import java.util.concurrent.Callable
+import javax.script.{ScriptContext, ScriptEngine, ScriptEngineFactory}
+
+import org.junit.Assert._
+import org.scalatest.FunSuite
 
 /**
- * JSR 223 compliance test
- *
- * <br>
- *
- * there is no direct reference to the ScalaScriptingEngine
- *
- */
-class ScriptEngineTest extends TestCase {
+  * JSR 223 compliance test
+  *
+  * <br>
+  *
+  * there is no direct reference to the ScalaScriptingEngine
+  *
+  */
+class ScriptEngineTest extends FunSuite {
 
   implicit def fun2Call[R](f: () => R) = new Callable[R] { def call: R = f() }
 
@@ -46,12 +47,11 @@ class ScriptEngineTest extends TestCase {
   }
 
   /**
-   *  tests a simple piece of code
-   *
-   *  this can be used as a reference for how to build a valid string that contains scala code for the ScalaScriptingEngine
-   */
-  def testSimple() {
-
+    *  tests a simple piece of code
+    *
+    *  this can be used as a reference for how to build a valid string that contains scala code for the ScalaScriptingEngine
+    */
+  test("Run a simple script") {
     val scriptEngine: ScriptEngine = getScriptEngine()
 
     var code = new StringBuilder()
@@ -78,10 +78,10 @@ class ScriptEngineTest extends TestCase {
   }
 
   /**
-   * multi-threaded test
-   *
-   * the purpose of this test is to demonstrate the capabilities/faults that the current ScalaScriptingEngine implementation has.
-   */
+    * multi-threaded test
+    *
+    * the purpose of this test is to demonstrate the capabilities/faults that the current ScalaScriptingEngine implementation has.
+    */
   //TODO get this test to work again
   /*def testMultipleThreads() {
 

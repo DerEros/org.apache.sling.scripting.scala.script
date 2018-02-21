@@ -7,10 +7,6 @@ import org.osgi.framework.Bundle
 
 import scala.tools.nsc.io.AbstractFile
 
-/**
-  * @author Eros Candelaresi <eros@candelaresi.de>
-  * @since 10.02.18 22:28
-  */
 class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(bundle, url, parent) {
 
   /**

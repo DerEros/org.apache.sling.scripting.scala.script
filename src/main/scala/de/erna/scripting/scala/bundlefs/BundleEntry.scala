@@ -11,10 +11,6 @@ import org.slf4s.Logging
 
 import scala.tools.nsc.io.AbstractFile
 
-/**
-  * @author Eros Candelaresi <eros@candelaresi.de>
-  * @since 10.02.18 22:27
-  */
 abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) extends AbstractFile with Logging {
   require(url != null, "url must not be null")
   lazy val (path: String, name: String) = getPathAndName(url)

@@ -16,34 +16,29 @@
  */
 package de.erna.scripting.scala
 
-import junit.framework.TestCase
-import junit.framework.Assert._
+import org.junit.Assert._
+import org.scalatest.FunSuite
 
-class ScalaScriptEngineFactoryTest extends TestCase {
+class ScalaScriptEngineFactoryTest extends FunSuite {
 
-  def testScriptEngineFactoryInit() {
+  test ("Initialize Scala script engine factory without errors") {
     val scalaEngineFactory = new ScalaScriptEngineFactory
     assertNotNull(scalaEngineFactory)
   }
-  
-  def testScriptEngineFactoryEngine() {
-    try {
-      val scriptEngine = (new ScalaScriptEngineFactory).getScriptEngine
-      assertNotNull(scriptEngine)
-    }
-    catch {
-      case e: IllegalStateException => // expected
-    }
+
+  test ("Creating script engine with empty Scala script engine factory throws exception") {
+    val scriptEngine = (new ScalaScriptEngineFactory).getScriptEngine
+    assertNotNull(scriptEngine)
   }
 
-  def testScriptEngineFactoryLanguage() {
+  test ("Scala script engine factory returns correct language name") {
     val language = (new ScalaScriptEngineFactory).getLanguageName
-      assertEquals("Scala", language)
+    assertEquals("Scala", language)
   }
 
-  def testScriptEngineFactoryLanguageVersion() {
+  test ("Scala script engine factory returns correct language version") {
     val version = (new ScalaScriptEngineFactory).getLanguageVersion()
     assertEquals("2.12.4", version)
   }
-  
+
 }

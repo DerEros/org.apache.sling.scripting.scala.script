@@ -16,9 +16,6 @@
  */
 package de.erna.scripting.scala
 
-import tools.nsc.io.AbstractFile
-import java.io.{OutputStream, InputStream}
-
 /**
  * General purpose utility functions
  */

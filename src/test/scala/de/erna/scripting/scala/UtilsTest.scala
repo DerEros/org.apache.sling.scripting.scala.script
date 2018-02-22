@@ -48,6 +48,6 @@ class UtilsTest extends FunSuite {
   }
 
   test ("Make identifier replaces prepends reserved Java keywords with _") {
-    assertResult("_void") { Utils.makeIdentifier("void") }
+    assertResult("void_") { Utils.makeIdentifier("void") }
   }
 }

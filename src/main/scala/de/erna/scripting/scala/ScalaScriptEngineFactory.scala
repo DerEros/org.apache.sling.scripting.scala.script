@@ -73,13 +73,13 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
   def getMimeTypes: List[String] = MIME_TYPES
   def getNames: List[String] = NAMES
   
-  def getParameter(key: String): String = key.toUpperCase match {
+  def getParameter(key: String): String = key.toLowerCase match {
     case ScriptEngine.ENGINE => getEngineName
     case ScriptEngine.ENGINE_VERSION => getEngineVersion
     case ScriptEngine.NAME => getNames.get(0)
     case ScriptEngine.LANGUAGE =>  getLanguageName
     case ScriptEngine.LANGUAGE_VERSION => getLanguageVersion
-    case "threading" => "multithreaded" 
+    case "threading" => "MULTITHREADED"
     case _ => null
   }
   
@@ -126,10 +126,6 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
       this.scriptInfo = scriptInfo
   }
 
-  protected def unsetScriptInfo(scriptInfo: ScriptInfo) {
-    this.scriptInfo = new AbstractScriptInfo{}
-  }
-
   def getScriptInfoProvider: ScriptInfo = scriptInfo
 
   def setSettingsProvider(settingsProvider: SettingsProvider) {
@@ -140,10 +136,6 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
       this.settingsProvider = settingsProvider
       scalaInterpreter = null
     }
-  }
-
-  protected def unsetSettingsProvider(settingsProvider: SettingsProvider) {
-    this.settingsProvider = new AbstractSettingsProvider{}
   }
 
   def getSettingsProvider: SettingsProvider = settingsProvider

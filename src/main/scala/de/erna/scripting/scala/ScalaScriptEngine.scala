@@ -142,10 +142,8 @@ class ScalaScriptEngine(factory: ScalaScriptEngineFactory, scriptInfo: ScriptInf
         outputStream.flush()
         result
       }
-      if (result.hasErrors)
-        throw new ScriptException(result.toString)
-      else
-        result
+
+      result
     }
     catch {
       case e: ScriptException => throw e

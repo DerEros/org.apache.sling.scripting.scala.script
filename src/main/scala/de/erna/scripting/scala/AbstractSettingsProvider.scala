@@ -61,7 +61,7 @@ abstract class AbstractSettingsProvider extends SettingsProvider {
       throw new IllegalArgumentException(ScalaScriptEngineFactory.SCALA_REPORTER + " must not be null")
     }
     
-    if (this.reporter != null) {
+    if (this.reporter != reporter) {
       this.reporter = reporter
       true
     }

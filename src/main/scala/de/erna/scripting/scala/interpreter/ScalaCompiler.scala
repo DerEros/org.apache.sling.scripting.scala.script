@@ -38,7 +38,7 @@ class ScalaCompiler(settings: Settings, reporter: Reporter, classes: Array[Abstr
       case _ => throw new Exception("Class path is not a class of 'ClassPath'")
     }
 
-    val classPathNew = classPathOrig ++ classes.map(c => new AbstractFileClassPath( c ) ).toList
+    val classPathNew = classPathOrig ++ classes.filter(_ != null).map(c => new AbstractFileClassPath( c ) ).toList
     val aggregatedClassPath = AggregateClassPath.createAggregate(classPathNew.reverse:_*)
 
     aggregatedClassPath

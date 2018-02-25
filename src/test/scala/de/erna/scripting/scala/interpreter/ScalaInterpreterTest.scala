@@ -2,30 +2,26 @@ package de.erna.scripting.scala.interpreter
 
 import java.io.File
 import java.nio.file.{Files, StandardCopyOption}
+import javax.script.{ScriptContext, SimpleScriptContext}
 
-import de.erna.scripting.scala.BacklogReporter
+import de.erna.scripting.scala.ScalaScriptEngineFactory
 import org.scalatest.FunSuite
 
-import scala.reflect.io.{AbstractFile, PlainFile}
-import scala.tools.nsc.Settings
+import scala.reflect.io.PlainFile
 
 class ScalaInterpreterTest extends FunSuite {
-  test ("Execute script from file") {
-//    val reporter = new BacklogReporter(new Settings, 10)
-//    val scalaInterpreter = new ScalaInterpreter(new Settings, reporter, new Array[AbstractFile](1))
-//    var scriptFile: File = new File("foo")
-//
-//    try {
-//      scriptFile = File.createTempFile("test", "scalainterpreter")
-//      val abstractFile = new PlainFile(scriptFile)
-//
-//      Files.copy(this.getClass.getResourceAsStream("/Script.scala"), scriptFile.toPath, StandardCopyOption.REPLACE_EXISTING )
-//      scalaInterpreter.interprete("de.erna.scripting.scala.Script", abstractFile, Bindings())
-//
-//      assertResult(false) { reporter.hasErrors }
-//    } finally {
-//      scriptFile.delete()
-//    }
+  def createInterpreter(context: ScriptContext) = (new ScalaScriptEngineFactory()).getScalaInterpreter(context)
+  def scriptAsAbstractFile(path: String) = {
+    val tempFile = File.createTempFile("test", "scalainterpret")
+    Files.copy(getClass.getResourceAsStream(path), tempFile.toPath, StandardCopyOption.REPLACE_EXISTING)
 
+    tempFile.deleteOnExit()
+    new PlainFile(tempFile)
+  }
+
+  test ("Execute script from file") {
+    val scalaInterpreter = createInterpreter(new SimpleScriptContext)
+    val reporter = scalaInterpreter.interprete("de.erna.scripting.scala.Script", scriptAsAbstractFile("/Script.scala"), Bindings())
+    assertResult(false) { reporter.hasErrors }
   }
 }

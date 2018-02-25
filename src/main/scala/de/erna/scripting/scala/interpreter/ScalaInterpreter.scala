@@ -126,12 +126,8 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
   protected def compile(sources: List[SourceFile]): Reporter = {
     reporter.reset
     val run = new compiler.Run
-    if (reporter.hasErrors)
-      reporter
-    else {
-      run.compileSources(sources)
-      reporter
-    }
+    run.compileSources(sources)
+    reporter
   }
 
   /**

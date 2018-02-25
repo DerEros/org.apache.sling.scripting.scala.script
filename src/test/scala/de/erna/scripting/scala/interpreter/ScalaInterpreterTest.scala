@@ -4,7 +4,7 @@ import java.io.{ByteArrayOutputStream, File}
 import java.nio.file.{Files, StandardCopyOption}
 
 import javax.script.{ScriptContext, SimpleScriptContext}
-import de.erna.scripting.scala.ScalaScriptEngineFactory
+import de.erna.scripting.scala.{AbstractScriptInfo, ScalaScriptEngineFactory}
 import org.scalatest.FunSuite
 import org.scalatest.mockito.MockitoSugar
 
@@ -14,6 +14,7 @@ import scala.reflect.io.PlainFile
 class ScalaInterpreterTest extends FunSuite with MockitoSugar {
   val script42 = scriptAsAbstractFile("/Script.scala")
   val scriptCompileError = scriptAsAbstractFile("/ErronousScript.scala")
+  val scriptWithBinding = scriptAsAbstractFile("/ScriptWithBinding.scala")
 
   def createInterpreter(context: ScriptContext) = (new ScalaScriptEngineFactory()).getScalaInterpreter(context)
   def scriptAsAbstractFile(path: String) = {
@@ -60,4 +61,36 @@ class ScalaInterpreterTest extends FunSuite with MockitoSugar {
     assertResult(true) { scalaInterpreter.compile(scriptCompileError).hasErrors }
   }
 
+  test ("Execute script without streams") {
+    val context = new SimpleScriptContext
+    val scriptInterpreter = createInterpreter(context)
+    val scriptInfo = new AbstractScriptInfo() {}
+    val script = Source.fromResource("Script.scala" ).mkString
+    val scriptClass = scriptInfo.getScriptClass(script, context)
+
+    assertResult(false) { scriptInterpreter.compile(scriptClass, script, Bindings()).hasErrors }
+    assertResult(false) { scriptInterpreter.execute(scriptClass, Bindings()).hasErrors }
+  }
+
+  trait Interface {
+    def name(): String
+  }
+  class Base {
+    def name() = "Base"
+  }
+
+  test ("Preprocess with views") {
+    class Derived extends Base with Interface {
+      override def name() = "Derived"
+    }
+
+    val bindings = Bindings()
+    bindings.putValue("someObj", new Derived)
+    val scriptInterpreter = createInterpreter(new SimpleScriptContext)
+    assertResult("Derived") {
+      val out = new ByteArrayOutputStream()
+      scriptInterpreter.interprete("de.erna.scripting.scala.Script", scriptWithBinding, bindings, null, out)
+      out.toString
+    }
+  }
 }

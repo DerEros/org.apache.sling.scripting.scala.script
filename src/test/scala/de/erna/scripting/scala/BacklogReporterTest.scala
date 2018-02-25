@@ -9,7 +9,7 @@ class BacklogReporterTest extends FunSuite {
   def pos(i: Int) = Position.offset(NoSourceFile, i)
   val noSourceFileName = NoSourceFile.toString()
 
-  test ("Cut of the oldest messages when full") {
+  test ("Cut off the oldest messages when full") {
     val reporter = new BacklogReporter(new Settings(), 3)
     reporter.display(pos(0), "Msg1", reporter.INFO)
     reporter.display(pos(0), "Msg2", reporter.INFO)
@@ -17,9 +17,9 @@ class BacklogReporterTest extends FunSuite {
     reporter.display(pos(0), "Msg4", reporter.INFO)
 
     val expected =
-      s"""INFO $noSourceFileName line 0 : Msg2
-         |INFO $noSourceFileName line 0 : Msg3
-         |INFO $noSourceFileName line 0 : Msg4""".stripMargin
+      "INFO <no source file> line 0 : Msg2\n" +
+      "INFO <no source file> line 0 : Msg3\n" +
+      "INFO <no source file> line 0 : Msg4"
     assertResult(expected) { reporter.toString }
   }
 

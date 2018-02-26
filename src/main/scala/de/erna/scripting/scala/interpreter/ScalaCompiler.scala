@@ -34,8 +34,7 @@ class ScalaCompiler(settings: Settings, reporter: Reporter, classes: Array[Abstr
   override def classPath: ClassPath = {
     val classPathOrig = super.classPath match {
       case aggregate: AggregateClassPath => aggregate.aggregates
-      case c: ClassPath => Seq(c)
-      case _ => throw new Exception("Class path is not a class of 'ClassPath'")
+      case _ => throw new Exception("Class path is not a class of 'AggregateClassPath'")
     }
 
     val classPathNew = classPathOrig ++ classes.filter(_ != null).map(c => new AbstractFileClassPath( c ) ).toList

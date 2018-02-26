@@ -69,7 +69,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
    * @throws InterpreterException
    */
   @throws(classOf[InterpreterException])
-  protected def preProcess(name: String, code: String, bindings: Bindings): String = {
+  def preProcess(name: String, code: String, bindings: Bindings): String = {
     val NL: String = System.getProperty("line.separator")
 
     def packetize(name: String): List[String] = name.split('.').toList

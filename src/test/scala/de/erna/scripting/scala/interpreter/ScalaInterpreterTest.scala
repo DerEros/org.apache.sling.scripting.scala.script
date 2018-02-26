@@ -3,10 +3,12 @@ package de.erna.scripting.scala.interpreter
 import java.io.{ByteArrayOutputStream, File}
 import java.nio.file.{Files, StandardCopyOption}
 
+import de.erna.scripting.scala.{AbstractScriptInfo, PrivateContainer, ScalaScriptEngineFactory}
 import javax.script.{ScriptContext, SimpleScriptContext}
-import de.erna.scripting.scala.{AbstractScriptInfo, ScalaScriptEngineFactory}
 import org.scalatest.FunSuite
 import org.scalatest.mockito.MockitoSugar
+import org.junit.Assert._
+import org.hamcrest.CoreMatchers._
 
 import scala.io.Source
 import scala.reflect.io.PlainFile
@@ -72,25 +74,24 @@ class ScalaInterpreterTest extends FunSuite with MockitoSugar {
     assertResult(false) { scriptInterpreter.execute(scriptClass, Bindings()).hasErrors }
   }
 
-  trait Interface {
-    def name(): String
-  }
-  class Base {
-    def name() = "Base"
+  test ("Class does not have PUBLIC modifier") {
+    val c = Class.forName("de.erna.scripting.scala.PrivateContainer$PrivateClass")
+    assertResult(0) { c.getModifiers & 1 }
   }
 
-  test ("Preprocess with views") {
-    class Derived extends Base with Interface {
-      override def name() = "Derived"
-    }
-
+  test ("Preprocess with private classes in binding") {
+    // Need some reflection magic to get a private class into binding; local Scala private classes
+    // always had modifier 1 (= public); check with Class[].getModifiers()
     val bindings = Bindings()
-    bindings.putValue("someObj", new Derived)
+    val derivedClazz = Class.forName("de.erna.scripting.scala.PrivateContainer$PrivateClass")
+    val constructor = derivedClazz.getConstructors.head
+    constructor.setAccessible(true)
+    val derived: AnyRef = constructor.newInstance(new PrivateContainer).asInstanceOf[AnyRef]
+
+    bindings.putValue("someObj", derived)
     val scriptInterpreter = createInterpreter(new SimpleScriptContext)
-    assertResult("Derived") {
-      val out = new ByteArrayOutputStream()
-      scriptInterpreter.interprete("de.erna.scripting.scala.Script", scriptWithBinding, bindings, null, out)
-      out.toString
-    }
+    val scriptHeader = scriptInterpreter.preProcess("de.erna.scripting.scala.Script", scriptWithBinding.mkString("\n"), bindings)
+    val expectedDef = "implicit def de_erna_scripting_scala_PrivateContainer$BaseClass2de_erna_scripting_scala_PrivateContainer$PublicInterface(x: de.erna.scripting.scala.PrivateContainer$BaseClass): de.erna.scripting.scala.PrivateContainer$PublicInterface = x.asInstanceOf[de.erna.scripting.scala.PrivateContainer$PublicInterface]"
+    assertThat(scriptHeader, containsString(expectedDef))
   }
 }

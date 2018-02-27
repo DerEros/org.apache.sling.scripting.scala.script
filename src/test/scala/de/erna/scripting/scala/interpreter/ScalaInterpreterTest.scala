@@ -20,6 +20,7 @@ class ScalaInterpreterTest extends FunSuite with MockitoSugar {
   val script42 = scriptAsAbstractFile("/Script.scala")
   val scriptCompileError = scriptAsAbstractFile("/ErronousScript.scala")
   val scriptWithBinding = scriptAsAbstractFile("/ScriptWithBinding.scala")
+  val scriptStandalone = scriptAsAbstractFile("/Standalone.scala")
 
   def createInterpreter(context: ScriptContext) = (new ScalaScriptEngineFactory()).getScalaInterpreter(context)
   def scriptAsAbstractFile(path: String) = {
@@ -58,7 +59,7 @@ class ScalaInterpreterTest extends FunSuite with MockitoSugar {
 
   test ("Compile script from file") {
     val scalaInterpreter = createInterpreter(new SimpleScriptContext)
-    assertResult(false) { scalaInterpreter.compile(script42).hasErrors }
+    assertResult(false) { scalaInterpreter.compile(scriptStandalone).hasErrors }
   }
 
   test ("Compile script from file with error") {

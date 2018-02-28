@@ -82,10 +82,4 @@ class ScalaScriptServiceTest {
 
     scalaScriptService.run(script, bindings)
   }
-
-  @Test
-  def dummy(): Unit = {
-    val names = bc.getBundles.map(_.getSymbolicName)
-    System.out.println(names.mkString(", "))
-  }
 }

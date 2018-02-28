@@ -24,13 +24,17 @@ class DummyTest {
   var scriptService: ScalaScriptService = _
 
   @Configuration
-  def config(): Array[ExamOption] = options(
-    mavenBundle("de.erna", "osgi-scala-scripting", "0.1.0-SNAPSHOT"),
-    mavenBundle("org.scala-lang", "scala-library", "2.12.4"),
-    mavenBundle("org.scala-lang", "scala-compiler", "2.12.4"),
-    mavenBundle("org.scala-lang", "scala-reflect", "2.12.4"),
-    mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.0.14"),
-    junitBundles())
+  def config(): Array[ExamOption] = {
+    System.setProperty("org.ops4j.pax.logging.DefaultServiceLog.level", "ERROR")
+    options(
+      mavenBundle("de.erna", "osgi-scala-scripting", "0.1.0-SNAPSHOT"),
+      mavenBundle("org.scala-lang", "scala-library", "2.12.4"),
+      mavenBundle("org.scala-lang", "scala-compiler", "2.12.4"),
+      mavenBundle("org.scala-lang", "scala-reflect", "2.12.4"),
+      mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.0.14"),
+      junitBundles(),
+      frameworkProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("ERROR"))
+  }
 
   @Test
   def spikeTest(): Unit = {

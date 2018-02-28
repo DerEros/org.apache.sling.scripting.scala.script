@@ -1,15 +1,14 @@
 package de.erna.testspike
 
+import de.erna.scripting.scala.service.ScalaScriptService
 import javax.inject.Inject
 import javax.script.ScriptException
-
-import de.erna.scripting.scala.service.ScalaScriptService
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.ops4j.pax.exam.CoreOptions.{junitBundles, mavenBundle, options}
 import org.ops4j.pax.exam.junit.PaxExam
 import org.ops4j.pax.exam.spi.reactors.{ExamReactorStrategy, PerMethod}
-import org.ops4j.pax.exam.{Configuration, Constants, ProbeBuilder, TestProbeBuilder, Option => ExamOption}
+import org.ops4j.pax.exam.{Configuration, ProbeBuilder, TestProbeBuilder, Option => ExamOption}
 import org.osgi.framework.BundleContext
 
 @RunWith(classOf[PaxExam])
@@ -22,13 +21,17 @@ class ScalaScriptServiceTest {
   var bc: BundleContext = _
 
   @Configuration
-  def config(): Array[ExamOption] = options(
-    mavenBundle("de.erna", "osgi-scala-scripting", "0.1.0-SNAPSHOT"),
-    mavenBundle("org.scala-lang", "scala-library", "2.12.4"),
-    mavenBundle("org.scala-lang", "scala-compiler", "2.12.4"),
-    mavenBundle("org.scala-lang", "scala-reflect", "2.12.4"),
-    mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.0.14"),
-    junitBundles())
+  def config(): Array[ExamOption] = {
+    System.setProperty("org.ops4j.pax.logging.DefaultServiceLog.level", "ERROR")
+    options(
+      mavenBundle("de.erna", "osgi-scala-scripting", "0.1.0-SNAPSHOT"),
+      mavenBundle("org.scala-lang", "scala-library", "2.12.4"),
+      mavenBundle("org.scala-lang", "scala-compiler", "2.12.4"),
+      mavenBundle("org.scala-lang", "scala-reflect", "2.12.4"),
+      mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.0.14"),
+      junitBundles()
+    )
+  }
 
   @ProbeBuilder
   def probeConfig(testProbeBuilder: TestProbeBuilder): TestProbeBuilder = {

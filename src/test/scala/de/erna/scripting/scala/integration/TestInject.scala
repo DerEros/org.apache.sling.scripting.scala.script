@@ -1,4 +1,4 @@
-package de.erna.testspike
+package de.erna.scripting.scala.integration
 
 class TestInject(sayWhat: String) {
   def saySomething() = sayWhat

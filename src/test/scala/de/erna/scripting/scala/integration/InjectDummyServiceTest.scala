@@ -39,12 +39,7 @@ class InjectDummyServiceTest extends JUnitSuite {
   }
 
   @Test
-  def spikeTest(): Unit = {
-    assertTrue(true)
-  }
-
-  @Test
-  def spikeStopTest(): Unit = {
+  def testCallDummyServiceWithResult(): Unit = {
     assertEquals("bar", service.foo())
   }
 }

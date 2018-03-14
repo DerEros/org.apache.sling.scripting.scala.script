@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://www.osgi.org/xmlns/scr/v1.1.0" name="DummyService">
+    <implementation class="de.erna.scripting.scala.dummy.DummyServiceImpl"/>
+    <service>
+        <provide interface="de.erna.scripting.scala.dummy.DummyService"/>
+    </service>
+</component>

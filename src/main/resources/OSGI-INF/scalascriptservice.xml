@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns="http://www.osgi.org/xmlns/scr/v1.0.0" name="de.erna.scripting.scala.service.ScalaScriptService">
+    <implementation class="de.erna.scripting.scala.service.ScalaScriptServiceImpl"/>
+    <service>
+        <provide interface="de.erna.scripting.scala.service.ScalaScriptService"/>
+    </service>
+</component>

@@ -22,6 +22,7 @@ import javax.script.{ScriptContext, ScriptEngine, ScriptEngineFactory}
 
 import org.junit.Assert._
 import org.scalatest.FunSuite
+import scala.languageFeature.implicitConversions
 
 /**
   * JSR 223 compliance test
@@ -36,7 +37,7 @@ class ScriptEngineTest extends FunSuite {
   implicit def fun2Call[R](f: () => R) = new Callable[R] { def call: R = f() }
 
   def getScriptEngine(): ScriptEngine = {
-    import scala.collection.JavaConversions._
+    import scala.collection.convert.ImplicitConversions._
 
     val factories = javax.imageio.spi.ServiceRegistry.lookupProviders(classOf[ScriptEngineFactory])
     val scalaEngineFactory = factories.find(_.getEngineName == "Scala Scripting Engine")

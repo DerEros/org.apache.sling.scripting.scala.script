@@ -16,15 +16,15 @@
  */
 package de.erna.scripting.scala.interpreter
 
-import scala.tools.nsc.interpreter.AbstractFileClassLoader
 import scala.tools.nsc.io.AbstractFile
 import scala.tools.nsc.reporters.Reporter
-import scala.tools.nsc.util.{BatchSourceFile, SourceFile}
 import scala.tools.nsc.{FatalError, Global, Settings}
 import java.io.{InputStream, OutputStream}
 
 import de.erna.scripting.scala.Utils.option
 import org.slf4s.Logging
+
+import scala.reflect.internal.util.{AbstractFileClassLoader, BatchSourceFile, SourceFile}
 
 /**
  * An interpreter for Scala scripts. Interpretation of scripts proceeds in the following steps:

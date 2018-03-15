@@ -54,6 +54,14 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+          <source>1.8</source>
+          <target>1.8</target>
+          <args>
+            <arg>-feature</arg>
+            <arg>-deprecation</arg>
+          </args>
+        </configuration>
       </plugin>
 
       <plugin>
@@ -112,7 +120,6 @@
             <Import-Package>
               !javax.swing.*,
               !jline.*,
-              javax.jcr.*;resolution:=optional,
               scala.tools.nsc.classpath,
               *
             </Import-Package>

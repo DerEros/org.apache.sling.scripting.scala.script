@@ -16,9 +16,9 @@
  */
 package de.erna.scripting.scala
 
+import scala.reflect.internal.util.Position
 import scala.tools.nsc.Settings
 import scala.tools.nsc.reporters.AbstractReporter
-import scala.tools.nsc.util.Position
 
 object BacklogReporter {
   val DEFAULT_SIZE = 50

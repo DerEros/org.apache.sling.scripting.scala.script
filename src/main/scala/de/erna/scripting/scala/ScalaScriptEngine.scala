@@ -95,7 +95,7 @@ class ScalaScriptEngine(factory: ScalaScriptEngineFactory, scriptInfo: ScriptInf
       val bindings = context.getBindings(ScriptContext.ENGINE_SCOPE)
       val scalaBindings = ScalaBindings()
 
-      import scala.collection.JavaConversions._
+      import scala.collection.convert.ImplicitConversions._
       for (key <- bindings.keySet) {
         val value = bindings.get(key)
         if (value == null) log.debug("{} has null value. skipping", key)

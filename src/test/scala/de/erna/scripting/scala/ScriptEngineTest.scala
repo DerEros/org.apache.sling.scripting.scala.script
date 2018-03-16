@@ -22,7 +22,7 @@ import javax.script.{ScriptContext, ScriptEngine, ScriptEngineFactory}
 
 import org.junit.Assert._
 import org.scalatest.FunSuite
-import scala.languageFeature.implicitConversions
+import scala.language.implicitConversions
 
 /**
   * JSR 223 compliance test

@@ -115,7 +115,7 @@
             <ScriptEngine-Name>${project.name}</ScriptEngine-Name>
             <ScriptEngine-Version>${project.version}</ScriptEngine-Version>
             <Export-Package>
-              de.erna.scripting.scala.*,scala.tools.nsc.custom
+              de.erna.scripting.scala.*,scala.tools.nsc.custom,org.slf4s
             </Export-Package>
             <Import-Package>
               !javax.swing.*,

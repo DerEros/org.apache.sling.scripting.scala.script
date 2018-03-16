@@ -70,12 +70,12 @@ class BundleEntryTest extends FunSuite with MockitoSugar with BeforeAndAfter {
   }
 
   test ("Looking up non-existing file") {
-    assert(createBundleEntry().lookupNameUnchecked("foobar", false) == NoFile)
+    assert( createBundleEntry().lookupNameUnchecked("foobar", directory = false ) == NoFile )
   }
 
   test ("Looking up existing file") {
     val subEntry = new TestBundleEntry(bundleMock, new URL("file://123/foobar"), parentMock)
     val entry = new TestBundleEntry(bundleMock, baseUrl, parentMock, subEntry)
-    assert(entry.lookupNameUnchecked("foobar", false) == subEntry)
+    assert( entry.lookupNameUnchecked("foobar", directory = false ) == subEntry )
   }
 }

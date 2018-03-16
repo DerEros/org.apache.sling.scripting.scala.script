@@ -16,11 +16,11 @@
  */
 package de.erna.scripting.scala
 
+import java.util
 import java.util.Collections
-import java.util.List
-import javax.script.{ScriptContext, ScriptEngine, ScriptEngineFactory, ScriptException}
 
 import de.erna.scripting.scala.interpreter.ScalaInterpreter
+import javax.script.{ScriptContext, ScriptEngine, ScriptEngineFactory, ScriptException}
 import org.slf4j.LoggerFactory
 
 import scala.tools.nsc.Settings
@@ -67,11 +67,11 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
   
   def getEngineName: String =  ENGINE_NAME
   def getEngineVersion: String = ENGINE_VERSION
-  def getExtensions: List[String] = EXTENSIONS
+  def getExtensions: util.List[String] = EXTENSIONS
   def getLanguageName: String = LANGUAGE_NAME
   def getLanguageVersion: String = LANGUAGE_VERSION
-  def getMimeTypes: List[String] = MIME_TYPES
-  def getNames: List[String] = NAMES
+  def getMimeTypes: util.List[String] = MIME_TYPES
+  def getNames: util.List[String] = NAMES
   
   def getParameter(key: String): String = key.toLowerCase match {
     case ScriptEngine.ENGINE => getEngineName

@@ -38,10 +38,9 @@ class AbstractFileClassPath(abstractFile: AbstractFile) extends ClassPath with L
 
     val path = inPackage.replaceAll("\\.", "/")
     abstractFile.lookupName(path, directory = true ) match {
-      case dirEntry: DirEntry => {
+      case dirEntry: DirEntry =>
         log.debug(s"Found $inPackage in ${abstractFile.name}")
         list(inPackage, dirEntry)
-      }
       case _ => ClassPathEntries(Seq(), Seq())
     }
   }

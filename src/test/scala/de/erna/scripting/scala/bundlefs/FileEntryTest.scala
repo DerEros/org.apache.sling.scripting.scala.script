@@ -19,10 +19,10 @@ class FileEntryTest extends FunSuite with MockitoSugar with BeforeAndAfter {
   }
 
   test ("Cannot lookup sub-files") {
-    assertNull(fileEntry.lookupName("*", false))
+    assertNull(fileEntry.lookupName("*", directory = false ) )
   }
 
   test ("Cannot lookup sub-directories") {
-    assertNull(fileEntry.lookupName("*", true))
+    assertNull(fileEntry.lookupName("*", directory = true ) )
   }
 }

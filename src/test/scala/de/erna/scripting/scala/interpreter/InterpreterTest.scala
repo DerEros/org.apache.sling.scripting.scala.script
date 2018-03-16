@@ -20,7 +20,7 @@ import java.io.{File, PrintWriter}
 
 import de.erna.scripting.scala.Utils.valueOrElse
 import javax.script.ScriptException
-import junit.framework.Assert.{assertEquals, assertFalse}
+import org.junit.Assert.{assertEquals, assertFalse}
 import org.scalatest.{BeforeAndAfter, FunSuite}
 
 import scala.tools.nsc.io.PlainFile

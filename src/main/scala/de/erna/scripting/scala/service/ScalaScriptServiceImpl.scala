@@ -1,16 +1,15 @@
 package de.erna.scripting.scala.service
 
 import java.io.StringWriter
-import javax.script.{Bindings, ScriptContext, ScriptEngine}
 
 import de.erna.scripting.scala.ScalaScriptEngineFactory
 import de.erna.scripting.scala.ScalaScriptEngineFactory.SCALA_CLASSPATH_X
 import de.erna.scripting.scala.bundlefs.BundleFS
+import javax.script.{Bindings, ScriptContext, ScriptEngine}
 import org.osgi.framework.{Bundle, BundleContext}
-import org.osgi.framework.wiring.BundleWiring
-import org.slf4s.Logging
 import org.osgi.service.component.ComponentContext
 import org.osgi.service.component.annotations.Activate
+import org.slf4s.Logging
 
 import scala.tools.nsc.io.AbstractFile
 
@@ -36,9 +35,6 @@ class ScalaScriptServiceImpl extends ScalaScriptService with Logging {
   }
 
   def getAllResources(bundleContext: BundleContext): List[AbstractFile] = {
-    val fs = BundleFS.create(bundleContext.getBundle)
-    val wiring = bundleContext.getBundle.adapt(classOf[BundleWiring])
-
     val bundles = getWiredBundles(bundleContext).reverse
     val resources = bundles.filter(_.getResource("/") != null).map(BundleFS.create)
 

@@ -18,7 +18,7 @@ package de.erna.scripting.scala.interpreter
 
 import org.slf4s.Logging
 
-import scala.tools.nsc.classpath.{AggregateClassPath, ZipAndJarClassPathFactory}
+import scala.tools.nsc.classpath.AggregateClassPath
 import scala.tools.nsc.custom.AbstractFileClassPath
 import scala.tools.nsc.io.AbstractFile
 import scala.tools.nsc.reporters.Reporter

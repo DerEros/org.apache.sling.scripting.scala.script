@@ -4,7 +4,7 @@ import java.io.{ByteArrayOutputStream, File}
 import java.nio.file.{Files, StandardCopyOption}
 
 import de.erna.scripting.scala.{AbstractScriptInfo, PrivateContainer, ScalaScriptEngineFactory}
-import javax.script.{ScriptContext, ScriptException, SimpleScriptContext}
+import javax.script.{ScriptContext, SimpleScriptContext}
 import org.hamcrest.CoreMatchers._
 import org.junit.Assert._
 import org.mockito.Mockito._
@@ -17,13 +17,13 @@ import scala.reflect.internal.FatalError
 import scala.reflect.io.PlainFile
 
 class ScalaInterpreterTest extends FunSuite with MockitoSugar {
-  val script42 = scriptAsAbstractFile("/Script.scala")
-  val scriptCompileError = scriptAsAbstractFile("/ErronousScript.scala")
-  val scriptWithBinding = scriptAsAbstractFile("/ScriptWithBinding.scala")
-  val scriptStandalone = scriptAsAbstractFile("/Standalone.scala")
+  private val script42 = scriptAsAbstractFile("/Script.scala")
+  private val scriptCompileError = scriptAsAbstractFile("/ErronousScript.scala")
+  private val scriptWithBinding = scriptAsAbstractFile("/ScriptWithBinding.scala")
+  private val scriptStandalone = scriptAsAbstractFile("/Standalone.scala")
 
-  def createInterpreter(context: ScriptContext) = (new ScalaScriptEngineFactory()).getScalaInterpreter(context)
-  def scriptAsAbstractFile(path: String) = {
+  private def createInterpreter(context: ScriptContext) = new ScalaScriptEngineFactory().getScalaInterpreter(context )
+  private def scriptAsAbstractFile(path: String) = {
     val tempFile = File.createTempFile("test", "scalainterpret")
     Files.copy(getClass.getResourceAsStream(path), tempFile.toPath, StandardCopyOption.REPLACE_EXISTING)
 
@@ -46,7 +46,7 @@ class ScalaInterpreterTest extends FunSuite with MockitoSugar {
   test ("Interprete script from file with output") {
     val scalaInterpreter = createInterpreter(new SimpleScriptContext)
     val out = new ByteArrayOutputStream
-    val reporter = scalaInterpreter.interprete("de.erna.scripting.scala.Script", script42, Bindings(), null, out)
+    scalaInterpreter.interprete("de.erna.scripting.scala.Script", script42, Bindings(), null, out)
     assertResult("42") { out.toString }
   }
 
@@ -107,10 +107,10 @@ class ScalaInterpreterTest extends FunSuite with MockitoSugar {
 
   test ("Interpreter throws exception when output directory cannot be determined") {
     val throwingSettings = new ScalaSettings() {
-      override lazy val outputDirs = getMock()
-      def getMock(): OutputDirs = {
+      override lazy val outputDirs: OutputDirs = getMock
+      def getMock: OutputDirs = {
         val throwingMock = mock[OutputDirs]
-        when(throwingMock.outputDirFor(null)).thenAnswer(_ => { throw new FatalError("Mock Error") })
+        when(throwingMock.outputDirFor(null)).thenAnswer(_ => { throw FatalError( "Mock Error" ) } )
         throwingMock
       }
     }

@@ -1,6 +1,7 @@
 package de.erna.scripting.scala.bundlefs
 
 import java.net.URL
+import java.util
 
 import de.erna.scripting.scala.Utils.nullOrElse
 import org.osgi.framework.Bundle
@@ -16,19 +17,19 @@ class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(b
 
   def iterator: Iterator[AbstractFile] = {
     new Iterator[AbstractFile]() {
-      val dirs = bundle.getEntryPaths(fullName)
+      val dirs: util.Enumeration[String ] = bundle.getEntryPaths(fullName )
 
-      var nextEntry = prefetch()
+      var nextEntry: BundleEntry = prefetch()
 
-      def hasNext() = {
+      def hasNext: Boolean = {
         if (nextEntry == null)
           nextEntry = prefetch()
 
         nextEntry != null
       }
 
-      def next() = {
-        if (hasNext()) {
+      def next(): BundleEntry = {
+        if (hasNext) {
           val entry = nextEntry
           nextEntry = null
           entry
@@ -40,7 +41,7 @@ class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(b
 
       private def prefetch() = {
         if (dirs != null && dirs.hasMoreElements) {
-          val entry = dirs.nextElement.asInstanceOf[String]
+          val entry = dirs.nextElement
           var entryUrl = bundle.getResource("/" + entry)
 
           // Bundle.getResource seems to be inconsistent with respect to requiring

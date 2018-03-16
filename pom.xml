@@ -38,6 +38,9 @@
     <exam.version>4.11.0</exam.version>
     <url.version>2.5.4</url.version>
     <felix.version>5.6.10</felix.version>
+
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <build>
@@ -55,11 +58,39 @@
           </execution>
         </executions>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
           <args>
             <arg>-feature</arg>
             <arg>-deprecation</arg>
+            <arg>-unchecked</arg>
+            <arg>-explaintypes</arg>
+            <arg>-target:jvm-1.8</arg>
+            <arg>-Xlint:adapted-args</arg>
+            <arg>-Xlint:by-name-right-associative</arg>
+            <arg>-Xlint:constant</arg>
+            <arg>-Xlint:delayedinit-select</arg>
+            <arg>-Xlint:doc-detached</arg>
+            <arg>-Xlint:inaccessible</arg>
+            <arg>-Xlint:infer-any</arg>
+            <arg>-Xlint:missing-interpolator</arg>
+            <arg>-Xlint:nullary-override</arg>
+            <arg>-Xlint:nullary-unit</arg>
+            <arg>-Xlint:option-implicit</arg>
+            <arg>-Xlint:package-object-classes</arg>
+            <arg>-Xlint:poly-implicit-overload</arg>
+            <arg>-Xlint:private-shadow</arg>
+            <arg>-Xlint:stars-align</arg>
+            <arg>-Xlint:type-parameter-shadow</arg>
+            <arg>-Xlint:unsound-match</arg>
+            <arg>-Yno-adapted-args</arg>
+            <arg>-Ywarn-dead-code</arg>
+            <arg>-Ywarn-extra-implicit</arg>
+            <arg>-Ywarn-unused:implicits</arg>
+            <arg>-Ywarn-unused:imports</arg>
+            <arg>-Ywarn-unused:locals</arg>
+            <arg>-Ywarn-unused:params</arg>
+            <arg>-Ywarn-unused:patvars</arg>
+            <arg>-Ywarn-unused:privates</arg>
+            <arg>-Ywarn-value-discard</arg>
           </args>
         </configuration>
       </plugin>

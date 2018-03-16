@@ -55,7 +55,7 @@ class ScriptEngineTest extends FunSuite {
   test("Run a simple script") {
     val scriptEngine: ScriptEngine = getScriptEngine()
 
-    var code = new StringBuilder()
+    val code = new StringBuilder()
     code.append("package de.erna.scripting.scala{")
     code.append("\n")
     code.append("class Script(args: ScriptArgs) {")

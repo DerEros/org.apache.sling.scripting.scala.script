@@ -21,7 +21,7 @@ class BindingsWrapperTest extends FunSuite {
     map.put("foo", "bar")
     map.put("baz", "oof")
     val bindings = Bindings(map)
-    var m = bindings - "baz"
+    val m = bindings - "baz"
 
     assertEquals(1, m.size)
     assertEquals(Some("bar"), m.get("foo"))

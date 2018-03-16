@@ -35,7 +35,7 @@ class ScalaScriptEngineTest extends FunSuite {
     val writer = new StringWriter()
 
     ctx.setWriter(writer)
-    val res = engine.eval(reader, ctx)
+    engine.eval(reader, ctx)
     assertResult("42") { writer.toString }
   }
 
@@ -47,7 +47,7 @@ class ScalaScriptEngineTest extends FunSuite {
 
     ctx.setWriter(writer)
     ctx.setReader(new StringReader("foobar"))
-    val res = engine.eval(script, ctx)
+    engine.eval(script, ctx)
     assertResult("foobar") { writer.toString }
   }
 

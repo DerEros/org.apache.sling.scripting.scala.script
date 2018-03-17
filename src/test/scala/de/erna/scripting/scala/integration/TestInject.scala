@@ -1,5 +1,5 @@
 package de.erna.scripting.scala.integration
 
 class TestInject(sayWhat: String) {
-  def saySomething() = sayWhat
+  def saySomething(): String = sayWhat
 }

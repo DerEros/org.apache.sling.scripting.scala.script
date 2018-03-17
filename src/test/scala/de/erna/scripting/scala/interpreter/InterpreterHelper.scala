@@ -50,7 +50,7 @@ class InterpreterHelper(val srcDir: AbstractFile, val outDir: AbstractFile) {
   }
 
   @throws(classOf[ScriptException]) 
-  def eval(name: String, src: AbstractFile, bindings: Bindings) = {
+  def eval(name: String, src: AbstractFile, bindings: Bindings): String = {
     try {
       interpreterOut.reset
       val result = interpreter.interprete(name, src, bindings, null, interpreterOut)

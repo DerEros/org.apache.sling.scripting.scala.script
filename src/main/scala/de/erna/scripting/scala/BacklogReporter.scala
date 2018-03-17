@@ -50,12 +50,12 @@ class BacklogReporter(val settings: Settings, size: Int) extends AbstractReporte
     // empty
   }
   
-  override def toString = 
+  override def toString: String =
     backLog.map(_.toString).mkString("\n")
 
   private class Info(pos: Position, msg: String, severity: Severity) {
                                  
-    override def toString = {
+    override def toString: String = {
       val level = severity match {
         case INFO => "INFO "
         case WARNING => "WARNING "

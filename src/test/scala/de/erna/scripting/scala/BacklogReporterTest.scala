@@ -6,8 +6,8 @@ import scala.reflect.internal.util.{NoSourceFile, Position}
 import scala.tools.nsc.Settings
 
 class BacklogReporterTest extends FunSuite {
-  def pos(i: Int) = Position.offset(NoSourceFile, i)
-  val noSourceFileName = NoSourceFile.toString()
+  def pos(i: Int): Position = Position.offset(NoSourceFile, i)
+  val noSourceFileName: String = NoSourceFile.toString()
 
   test ("Cut off the oldest messages when full") {
     val reporter = new BacklogReporter(new Settings(), 3)

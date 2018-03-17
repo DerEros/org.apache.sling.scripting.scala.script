@@ -322,7 +322,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
   def execute(name: String, bindings: Bindings, in: InputStream, out: OutputStream): Reporter =
     execute(name, bindings, option(in), option(out))
 
-  def outputDir = try {
+  def outputDir: AbstractFile = try {
       settings.outputDirs.outputDirFor(null);
     }
     catch {

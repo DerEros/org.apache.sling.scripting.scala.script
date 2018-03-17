@@ -12,7 +12,7 @@ import org.mockito.ArgumentMatchers._
 
 class DirEntryTest extends FunSuite with MockitoSugar with BeforeAndAfter {
   var bundleMock: Bundle = _
-  var baseUrl = new URL("file://123/")
+  val baseUrl = new URL("file://123/")
   var parentMock: DirEntry = _
 
   before {

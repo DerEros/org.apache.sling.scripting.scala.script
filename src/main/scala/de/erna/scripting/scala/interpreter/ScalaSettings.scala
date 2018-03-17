@@ -26,6 +26,6 @@ import scala.tools.nsc.Settings
  */  
 class ScalaSettings(error: String => Unit) extends Settings(error) {
   def this() = this(Console.println)
-  def parse(line: String) = parseParams(splitParams(line))
+  def parse(line: String): List[String] = parseParams(splitParams(line))
 }
 

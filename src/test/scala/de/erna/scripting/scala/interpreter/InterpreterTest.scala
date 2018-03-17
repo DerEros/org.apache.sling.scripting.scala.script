@@ -37,7 +37,7 @@ class InterpreterTest extends FunSuite with BeforeAndAfter {
     val outDir = workDir.subdirectoryNamed("classes")
     
     interpreterHelper = new InterpreterHelper(srcDir, outDir) {
-      override def getClasspath = valueOrElse(System.getProperty("surefire.test.class.path")) {
+      override def getClasspath: String = valueOrElse(System.getProperty("surefire.test.class.path")) {
         super.getClasspath
       }
     }

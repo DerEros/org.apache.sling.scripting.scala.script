@@ -54,7 +54,7 @@ trait Bindings extends Map[String, AnyRef] {
    * @param clazz  the class whos view to calculate
    * @return  a list of Class[_] instances representing the views of <code>clazz</code>.
    */
-  def getViews(clazz: Class[_]) = {
+  def getViews(clazz: Class[_]): List[Class[_]] = {
     def findLeastAccessibleClass(clazz: Class[_]): Class[_] = {
       if   (accessible(clazz)) clazz
       else findLeastAccessibleClass(clazz.getSuperclass)
@@ -95,14 +95,14 @@ trait Bindings extends Map[String, AnyRef] {
  * Default implementation of {@link Bindings} backed by a mutable Map
  */
 private class BindingsWrapper(map: mutable.Map[String, AnyRef]) extends Bindings {
-  def + [B >: AnyRef] (kv: (String, B)) = map + kv
-  def - (key: String) = map - key
+  def + [B >: AnyRef] (kv: (String, B)): mutable.Map[String, B] = map + kv
+  def - (key: String): mutable.Map[String, AnyRef] = map - key
   
-  override def size = map.size
-  override def get(name: String) = map.get(name)
+  override def size: Int = map.size
+  override def get(name: String): Option[AnyRef] = map.get(name)
   override def iterator: Iterator[(String, AnyRef)] = map.iterator
 
-  def putValue(name: String, value: AnyRef) =
+  def putValue(name: String, value: AnyRef): AnyRef =
     map.put(name, value) match {
       case Some(a) => a
       case None => null

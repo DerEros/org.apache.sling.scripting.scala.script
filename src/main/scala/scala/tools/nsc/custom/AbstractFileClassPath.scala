@@ -45,7 +45,7 @@ class AbstractFileClassPath(abstractFile: AbstractFile) extends ClassPath with L
     }
   }
 
-  def list( inPackage: String, dirEntry: DirEntry ) = {
+  def list( inPackage: String, dirEntry: DirEntry ): ClassPathEntries = {
     val prefix = if (inPackage.isEmpty) "" else s"$inPackage."
     val packages = dirEntry.filter(_.isClassContainer).map(f => PackageEntryImpl(s"$prefix${f.name}"))
     val classes = dirEntry.filter(!_.isDirectory).map(ClassFileEntryImpl )

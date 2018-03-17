@@ -16,11 +16,13 @@
  */
 package de.erna.scripting.scala
 
-import java.io.{BufferedReader, Reader, IOException, OutputStream, InputStream}
+import java.io._
 import java.util.concurrent.locks.{ReadWriteLock, ReentrantReadWriteLock}
-import javax.script.{AbstractScriptEngine, Bindings, SimpleBindings, ScriptEngineFactory, ScriptException, ScriptContext}
+
+import javax.script._
 import Utils.makeIdentifier
 import org.slf4j.LoggerFactory
+
 import scala.tools.nsc.reporters.Reporter
 import de.erna.scripting.scala.interpreter.{Bindings => ScalaBindings}
 
@@ -70,7 +72,7 @@ class ScalaScriptEngine(factory: ScalaScriptEngineFactory, scriptInfo: ScriptInf
     factory;
 
   @throws(classOf[ScriptException])
-  def eval(reader: Reader, context: ScriptContext) = {
+  def eval(reader: Reader, context: ScriptContext): AnyRef = {
     val script = new StringBuilder
     try {
       val bufferedScript = new BufferedReader(reader)
@@ -90,7 +92,7 @@ class ScalaScriptEngine(factory: ScalaScriptEngineFactory, scriptInfo: ScriptInf
   }
 
   @throws(classOf[ScriptException])  
-  def eval(script: String, context: ScriptContext) = {
+  def eval(script: String, context: ScriptContext): Reporter = {
     try {
       val bindings = context.getBindings(ScriptContext.ENGINE_SCOPE)
       val scalaBindings = ScalaBindings()
@@ -118,7 +120,7 @@ class ScalaScriptEngine(factory: ScalaScriptEngineFactory, scriptInfo: ScriptInf
 
       result = readLocked(rwLock) {
         val outputStream = new OutputStream {
-          val writer = context.getWriter
+          val writer: Writer = context.getWriter
 
           @throws(classOf[IOException])
           def write(b: Int) {
@@ -132,10 +134,10 @@ class ScalaScriptEngine(factory: ScalaScriptEngineFactory, scriptInfo: ScriptInf
         }
         
         val inputStream = new InputStream {
-          val reader = context.getReader
+          val reader: Reader = context.getReader
 
           @throws(classOf[IOException])
-          def read() = reader.read();
+          def read(): Int = reader.read();
         }
           
         val result = interpreter.execute(scriptClass, scalaBindings, inputStream, outputStream)

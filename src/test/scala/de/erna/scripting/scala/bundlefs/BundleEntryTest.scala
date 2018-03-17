@@ -12,7 +12,7 @@ import scala.reflect.io.AbstractFile
 
 class BundleEntryTest extends FunSuite with MockitoSugar with BeforeAndAfter {
   var bundleMock: Bundle = _
-  var baseUrl = new URL("file://123/")
+  val baseUrl = new URL("file://123/")
   var parentMock: DirEntry = _
 
   class TestBundleEntry(bundle: Bundle, url: URL, parent: DirEntry, val subEntry: AbstractFile = null)

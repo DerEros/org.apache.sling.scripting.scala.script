@@ -36,7 +36,7 @@ object Utils {
    * @param default
    * @return <code>t</code> or <code>default</code> if <code>null</code>.
    */
-  def valueOrElse[T](t: T)(default: => T) =
+  def valueOrElse[T](t: T)(default: => T): T =
     if (t == null) default
     else t
 
@@ -54,7 +54,7 @@ object Utils {
    * @param identifier Identifier to convert
    * @return Legal Java/Scala identifier corresponding to the given identifier
    */
-  def makeIdentifier(identifier: String) = {
+  def makeIdentifier(identifier: String): String = {
     val id = new StringBuilder(identifier.length)
     if (!Character.isJavaIdentifierStart(identifier.charAt(0))) 
       id.append('_')
@@ -74,7 +74,7 @@ object Utils {
   /**
    * Mangle the specified character to create a legal Java/Scala class name.
    */
-  def mangleChar(ch: Char) = {
+  def mangleChar(ch: Char): StringBuilder = {
     val result = new StringBuilder("01234")
     result(0) = '_'
     result(1) = Character.forDigit((ch >> 12) & 0xf, 16)
@@ -87,7 +87,7 @@ object Utils {
   /**
    * Test whether the argument is a Scala/Java keyword
    */
-  def isKeyword(token: String) = 
+  def isKeyword(token: String): Boolean =
     Set (
       "abstract", "assert", "boolean", "break", "byte", "case", "catch",
       "char", "class", "const", "continue", "default", "do", "double",

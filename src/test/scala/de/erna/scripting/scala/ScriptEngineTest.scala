@@ -140,7 +140,7 @@ class ScriptEngineTest extends FunSuite {
   };
 
   class TestInject(sayWhat: String) {
-    def saySomething() = sayWhat;
+    def saySomething(): String = sayWhat;
   }
 
 }

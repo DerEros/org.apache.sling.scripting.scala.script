@@ -37,11 +37,11 @@ object ScalaScriptEngineFactory {
 
   val ENGINE_NAME = "Scala Scripting Engine"
   val LANGUAGE_VERSION = "2.12.4"
-  val ENGINE_VERSION = "0.9/scala " + LANGUAGE_VERSION
-  val EXTENSIONS = Collections.singletonList("scala")
+  val ENGINE_VERSION: String = "0.9/scala " + LANGUAGE_VERSION
+  val EXTENSIONS: util.List[String] = Collections.singletonList("scala")
   val LANGUAGE_NAME = "Scala"
-  val MIME_TYPES = Collections.singletonList("application/x-scala")
-  val NAMES = Collections.singletonList("scala")
+  val MIME_TYPES: util.List[String] = Collections.singletonList("application/x-scala")
+  val NAMES: util.List[String] = Collections.singletonList("scala")
 }
 
 /**

@@ -20,7 +20,7 @@ abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) e
     */
   def file: File = null
 
-  def absolute = this
+  def absolute: BundleEntry = this
 
   /**
     * @return last modification time or 0 if not known
@@ -51,7 +51,7 @@ abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) e
   def create { unsupported }
   def delete { unsupported }
 
-  def lookupNameUnchecked(name: String, directory: Boolean) = {
+  def lookupNameUnchecked(name: String, directory: Boolean): AbstractFile = {
     val file = lookupName(name, directory)
     if (file == null) NoFile
     else file
@@ -70,7 +70,7 @@ abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) e
     (u.substring(if (j > 0) 1 else 0, if (j > 1) j - 1 else j), u.substring(j, k))
   }
 
-  override def toString = fullName
+  override def toString: String = fullName
 
-  override def toURL = url
+  override def toURL: URL = url
 }

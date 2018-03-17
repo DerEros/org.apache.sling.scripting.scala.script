@@ -12,7 +12,7 @@ class FileEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(
     * @return false
     */
   def isDirectory: Boolean = false
-  override def sizeOption: Option[Int] = Some(bundle.getEntry(fullName).openConnection().getContentLength())
+  override def sizeOption: Option[Int] = Some(bundle.getEntry(fullName).openConnection().getContentLength)
   def iterator: Iterator[AbstractFile] = Iterator.empty
   def lookupName(name: String, directory: Boolean): AbstractFile = null
 }

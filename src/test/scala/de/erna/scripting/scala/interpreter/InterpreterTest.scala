@@ -29,8 +29,8 @@ import scala.tools.nsc.io.PlainFile
  * Standard test cases where files are read/written to/from the file system.
  */  
 class InterpreterTest extends FunSuite with BeforeAndAfter {
-  var interpreterHelper: InterpreterHelper = null;
-  
+  var interpreterHelper: InterpreterHelper = _
+
   before {
     val workDir = new PlainFile(new File("target")).subdirectoryNamed("tmp")
     val srcDir = workDir.subdirectoryNamed("src")
@@ -60,7 +60,7 @@ class InterpreterTest extends FunSuite with BeforeAndAfter {
   }
 
   test ("Use eval to run script that throws error") {
-    val err = "Some error here";
+    val err = "Some error here"
     val code = "package a { class Testi(args: TestiArgs) { throw new Error(\"" + err + "\") }}"
     try {
       interpreterHelper.eval("a.Testi", code, Bindings())
@@ -94,7 +94,7 @@ class InterpreterTest extends FunSuite with BeforeAndAfter {
     val src = srcDir.fileNamed("Testi.scala")
     val writer = new PrintWriter(src.output)
     writer.print(code)
-    writer.close
+    writer.close()
 
     val out = new java.io.ByteArrayOutputStream
     var result = interpreter.compile("a.Testi", src, bindings)

@@ -34,9 +34,9 @@ import scala.language.implicitConversions
   */
 class ScriptEngineTest extends FunSuite {
 
-  implicit def fun2Call[R](f: () => R) = new Callable[R] { def call: R = f() }
+  implicit def fun2Call[R](f: () => R): Callable[R] = new Callable[R] { def call: R = f() }
 
-  def getScriptEngine(): ScriptEngine = {
+  def getScriptEngine: ScriptEngine = {
     import scala.collection.convert.ImplicitConversions._
 
     val factories = javax.imageio.spi.ServiceRegistry.lookupProviders(classOf[ScriptEngineFactory])
@@ -53,7 +53,7 @@ class ScriptEngineTest extends FunSuite {
     *  this can be used as a reference for how to build a valid string that contains scala code for the ScalaScriptingEngine
     */
   test("Run a simple script") {
-    val scriptEngine: ScriptEngine = getScriptEngine()
+    val scriptEngine: ScriptEngine = getScriptEngine
 
     val code = new StringBuilder()
     code.append("package de.erna.scripting.scala{")
@@ -72,7 +72,7 @@ class ScriptEngineTest extends FunSuite {
     b.put("obj", new TestInject(say))
 
     val writer = new StringWriter()
-    scriptEngine.getContext().setWriter(writer)
+    scriptEngine.getContext.setWriter(writer)
 
     scriptEngine.eval(code.toString(), b)
     assertEquals("output:" + say, writer.toString.trim())
@@ -127,20 +127,20 @@ class ScriptEngineTest extends FunSuite {
   def buildSayCallable(code: String, say: String): Boolean = {
 
     val scriptEngine: ScriptEngine = getScriptEngine
-    println("thread executing with engine: " + scriptEngine + ", say: " + say);
+    println("thread executing with engine: " + scriptEngine + ", say: " + say)
 
-    val b = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE);
-    b.put("obj", new TestInject(say));
+    val b = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE)
+    b.put("obj", new TestInject(say))
 
-    val writer = new StringWriter();
-    scriptEngine.getContext().setWriter(writer);
+    val writer = new StringWriter()
+    scriptEngine.getContext.setWriter(writer)
 
-    scriptEngine.eval(code.toString(), b)
-    return "output:" + say == writer.toString.trim();
-  };
+    scriptEngine.eval(code.toString, b)
+    "output:" + say == writer.toString.trim()
+  }
 
   class TestInject(sayWhat: String) {
-    def saySomething(): String = sayWhat;
+    def saySomething(): String = sayWhat
   }
 
 }

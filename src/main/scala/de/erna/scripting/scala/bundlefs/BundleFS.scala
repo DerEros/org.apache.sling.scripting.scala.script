@@ -21,13 +21,14 @@ import org.osgi.framework.Bundle
 import scala.tools.nsc.io.AbstractFile
 
 /**
- * Implementation of {@link AbstractFile} on top of a {@link org.osgi.framework.Bundle}
- */
+ * Implementation of  on top of a
+  */
 object BundleFS {
 
   /**
-   * Create a new {@link AbstractFile} instance representing an
-   * {@link org.osgi.framework.Bundle}
+   * Create a new  instance representing an
+   *
+    *
    * @param bundle
    */
   def create(bundle: Bundle): AbstractFile = {

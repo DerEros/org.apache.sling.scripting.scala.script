@@ -32,7 +32,7 @@ object ScalaScriptEngine {
 }
 
 /**
- * JSR 223 compliant {@link ScriptEngine} for Scala.
+ * JSR 223 compliant  for Scala.
  * Scripts must be of the following form:
  * 
  * <pre>
@@ -44,7 +44,7 @@ object ScalaScriptEngine {
  * }
  * </pre>
  * 
- * Here it is assumed that the {@Bindings} passed for script evaluation contains a 
+ * Here it is assumed that the  passed for script evaluation contains a
  * value for the name <em>bar</em>.
  * 
  * The parameter <code>args</code> contains statically typed bindings generated from the 
@@ -69,7 +69,7 @@ class ScalaScriptEngine(factory: ScalaScriptEngineFactory, scriptInfo: ScriptInf
     new SimpleBindings
   
   def getFactory: ScriptEngineFactory = 
-    factory;
+    factory
 
   @throws(classOf[ScriptException])
   def eval(reader: Reader, context: ScriptContext): AnyRef = {
@@ -137,7 +137,7 @@ class ScalaScriptEngine(factory: ScalaScriptEngineFactory, scriptInfo: ScriptInf
           val reader: Reader = context.getReader
 
           @throws(classOf[IOException])
-          def read(): Int = reader.read();
+          def read(): Int = reader.read()
         }
           
         val result = interpreter.execute(scriptClass, scalaBindings, inputStream, outputStream)

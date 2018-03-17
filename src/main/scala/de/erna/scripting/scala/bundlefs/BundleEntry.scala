@@ -13,7 +13,7 @@ import scala.tools.nsc.io.AbstractFile
 abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) extends AbstractFile with Logging {
   require(url != null, "url must not be null")
   lazy val (path: String, name: String) = getPathAndName(url)
-  lazy val fullName: String = (path::name::Nil).filter(_.size != 0).mkString("/")
+  lazy val fullName: String = (path::name::Nil).filter(_.nonEmpty).mkString("/")
 
   /**
     * @return null

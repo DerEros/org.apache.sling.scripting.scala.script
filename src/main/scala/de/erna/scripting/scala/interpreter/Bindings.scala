@@ -63,7 +63,7 @@ trait Bindings extends Map[String, AnyRef] {
     def getInterfacesUpTo(clazz: Class[_], bound: Class[_]) = {
       def getInterfacesUpTo(intfs: mutable.Set[Class[_]], clazz: Class[_], bound: Class[_]): mutable.Set[Class[_]] = 
         if (clazz == bound) intfs
-        else getInterfacesUpTo(intfs ++ clazz.getInterfaces.filter(accessible(_)), clazz.getSuperclass, bound)
+        else getInterfacesUpTo(intfs ++ clazz.getInterfaces.filter(accessible), clazz.getSuperclass, bound)
       
       getInterfacesUpTo(mutable.Set.empty, clazz, bound)
     }
@@ -80,7 +80,7 @@ trait Bindings extends Map[String, AnyRef] {
     var o = getInterfacesUpTo(clazz, l) 
     var v = Set.empty ++ o
     
-    while (!v.isEmpty) {
+    while (v.nonEmpty) {
       val w = v.find(_ => true).get
       val p = w.getInterfaces.filter(accessible)
       o = o -- p
@@ -92,7 +92,7 @@ trait Bindings extends Map[String, AnyRef] {
 }
 
 /**
- * Default implementation of {@link Bindings} backed by a mutable Map
+ * Default implementation of  backed by a mutable Map
  */
 private class BindingsWrapper(map: mutable.Map[String, AnyRef]) extends Bindings {
   def + [B >: AnyRef] (kv: (String, B)): mutable.Map[String, B] = map + kv

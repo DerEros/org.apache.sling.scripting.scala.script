@@ -26,7 +26,7 @@ import scala.tools.nsc.io.AbstractFile
 import scala.tools.nsc.reporters.Reporter
 
 /**
- * Abstract base implementation of a {@link SettingsProvider}. 
+ * Abstract base implementation of a .
  */  
 abstract class AbstractSettingsProvider extends SettingsProvider {
   protected var settings: Settings = {

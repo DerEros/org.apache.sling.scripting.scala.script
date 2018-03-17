@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component xmlns="http://www.osgi.org/xmlns/scr/v1.0.0" enabled="true" name="de.erna.scripting.scala.ScalaScriptEngineFactory">
+<component xmlns="http://www.osgi.org/xmlns/scr/v1.0.0" name="de.erna.scripting.scala.ScalaScriptEngineFactory">
     <implementation class="de.erna.scripting.scala.ScalaScriptEngineFactory"/>
-    <service servicefactory="false">
+    <service>
         <provide interface="javax.script.ScriptEngineFactory"/>
     </service>
     <!--<property name="service.pid" value="de.erna.scripting.scala.ScalaScriptEngineFactory"/>-->

@@ -47,7 +47,7 @@ object Utils {
    * <code>None</code> otherwise.
    */
   def option[T](value: T): Option[T] =
-    if (null == value) None else Some(value)
+    Option(value)
 
   /**
    * Converts the given identifier to a legal Java/Scala identifier

@@ -28,9 +28,9 @@ import scala.tools.nsc.io.AbstractFile
 import scala.tools.nsc.reporters.Reporter
 
 object ScalaScriptEngineFactory {
-  private val log = LoggerFactory.getLogger(classOf[ScalaScriptEngineFactory]);
-  private val NL = System.getProperty("line.separator");
-  
+  private val log = LoggerFactory.getLogger(classOf[ScalaScriptEngineFactory])
+  private val NL = System.getProperty("line.separator")
+
   val SCALA_SETTINGS = "scala.settings"
   val SCALA_REPORTER = "scala.reporter"
   val SCALA_CLASSPATH_X = "scala.classpath.x"
@@ -45,8 +45,8 @@ object ScalaScriptEngineFactory {
 }
 
 /**
- * JSR 223 compliant {@link ScriptEngineFactory} for Scala.
- * {@link ScriptInfo} and {@link SettingsProvider} may be used to parametrize
+ * JSR 223 compliant  for Scala.
+ * and  may be used to parametrize
  * this factory. When running inside an OSGi container, ScriptInfo and 
  * SettingsProvider are looked up and injected by the Service Component Runtime.
  */
@@ -103,14 +103,14 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
     }
     
     val qClassName = scriptInfo.getDefaultScriptClass
-    val packageName = packageOf(qClassName);
-    val className = classOf(qClassName);
+    val packageName = packageOf(qClassName)
+    val className = classOf(qClassName)
 
     "package " + packageName + " {" + NL +
     "  class " + className + "(args: " + className + "Args) {" + NL +
     statements.mkString(NL) + 
     "  }" + NL + 
-    "}" + NL;
+    "}" + NL
   }
 
   def getScriptEngine: ScriptEngine =  

@@ -24,7 +24,7 @@ object AbstractScriptInfo {
 }
 
 /**
- * Abstract base implementation of {@link ScriptInfo}. 
+ * Abstract base implementation of .
  */
 abstract class AbstractScriptInfo(protected var defaultScriptClass: String) extends ScriptInfo {
   
@@ -43,8 +43,8 @@ abstract class AbstractScriptInfo(protected var defaultScriptClass: String) exte
    */
   @throws(classOf[ScriptException])
   def getScriptClass(script: String, context: ScriptContext): String = {
-    val value = context.getAttribute(AbstractScriptInfo.SCALA_SCRIPT_CLASS);
-    
+    val value = context.getAttribute(AbstractScriptInfo.SCALA_SCRIPT_CLASS)
+
     value match {
       case v: String  => v
       case _          => defaultScriptClass

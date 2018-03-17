@@ -29,12 +29,13 @@ import scala.reflect.internal.util.{AbstractFileClassLoader, BatchSourceFile, So
 /**
  * An interpreter for Scala scripts. Interpretation of scripts proceeds in the following steps:
  * <ol>
- * <li>Pre-compilation: The source script is {@link #preProcess} wrapped into a wrapper which
- *   contains variable definitions of the approproate types for the passed {@link Bindings bindings}.</li>
- * <li>Compilation: The resulting source code is {@link #compile compiled} by the Scala compiler. </li>
- * <li>Execution: The class file is {@link #execute loaded} and its main method called.</li>
+ * <li>Pre-compilation: The source script is  wrapped into a wrapper which
+ *   contains variable definitions of the approproate types for the passed .</li>
+ * <li>Compilation: The resulting source code is  by the Scala compiler. </li>
+ * <li>Execution: The class file is  and its main method called.</li>
  * </ol>
- * @param settings  compiler settings
+  *
+  * @param settings  compiler settings
  * @param reporter  reporter for compilation
  * @param classes  additional classes for the classpath
  */
@@ -323,8 +324,8 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
     execute(name, bindings, option(in), option(out))
 
   def outputDir: AbstractFile = try {
-      settings.outputDirs.outputDirFor(null);
-    }
+      settings.outputDirs.outputDirFor(null)
+  }
     catch {
       case e: FatalError => throw new InterpreterException(e) 
     }

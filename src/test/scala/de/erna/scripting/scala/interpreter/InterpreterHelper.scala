@@ -39,9 +39,9 @@ class InterpreterHelper(val srcDir: AbstractFile, val outDir: AbstractFile) {
   @throws(classOf[ScriptException]) 
   def eval(name: String, code: String, bindings: Bindings): String = {
     try {
-      interpreterOut.reset
+      interpreterOut.reset()
       val result = interpreter.interprete(name, code, bindings, null, interpreterOut)
-      if (result.hasErrors) throw new ScriptException(result.toString())
+      if (result.hasErrors) throw new ScriptException(result.toString)
       interpreterOut.toString
     }
     catch {
@@ -52,9 +52,9 @@ class InterpreterHelper(val srcDir: AbstractFile, val outDir: AbstractFile) {
   @throws(classOf[ScriptException]) 
   def eval(name: String, src: AbstractFile, bindings: Bindings): String = {
     try {
-      interpreterOut.reset
+      interpreterOut.reset()
       val result = interpreter.interprete(name, src, bindings, null, interpreterOut)
-      if (result.hasErrors) throw new ScriptException(result.toString())
+      if (result.hasErrors) throw new ScriptException(result.toString)
       interpreterOut.toString
     }
     catch {
@@ -64,9 +64,10 @@ class InterpreterHelper(val srcDir: AbstractFile, val outDir: AbstractFile) {
 
   // -----------------------------------------------------< protected >---
   
-  protected def getSettings: Settings = new Settings();
+  protected def getSettings: Settings = new Settings()
+
   protected def getClasspath: String = System.getProperty("java.class.path")
-  protected def getReporter(settings: Settings): Reporter = new BacklogReporter(settings); 
+  protected def getReporter(settings: Settings): Reporter = new BacklogReporter(settings)
 
   protected def createInterpreter: ScalaInterpreter = {
     val settings = getSettings

@@ -26,7 +26,7 @@ import scala.tools.nsc.util.ClassPath
 import scala.tools.nsc.{Global, Settings}
 
 /**
- * Extended Scala compiler which supports a class path with {@link AbstractFile} entries.
+ * Extended Scala compiler which supports a class path with  entries.
  */
 class ScalaCompiler(settings: Settings, reporter: Reporter, classes: Array[AbstractFile])
   extends Global(settings, reporter) with Logging {

@@ -18,20 +18,6 @@ class UtilsTest extends FunSuite {
     }
   }
 
-  test("Value is returned when not null") {
-    val expected = "foo"
-    assertResult(expected) {
-      Utils.valueOrElse("foo")("bar")
-    }
-  }
-
-  test("Default is returned when null") {
-    val expected = "bar"
-    assertResult(expected) {
-      Utils.valueOrElse(null.asInstanceOf[String])("bar")
-    }
-  }
-
   test("Option creates Some when value is present") {
     val expected = Some("foo")
     assertResult(expected) {

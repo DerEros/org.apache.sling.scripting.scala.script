@@ -18,7 +18,6 @@ package de.erna.scripting.scala.interpreter
 
 import java.io.{File, PrintWriter}
 
-import de.erna.scripting.scala.Utils.valueOrElse
 import javax.script.ScriptException
 import org.junit.Assert.{assertEquals, assertFalse}
 import org.scalatest.{BeforeAndAfter, FunSuite}
@@ -37,9 +36,7 @@ class InterpreterTest extends FunSuite with BeforeAndAfter {
     val outDir = workDir.subdirectoryNamed("classes")
 
     interpreterHelper = new InterpreterHelper(srcDir, outDir) {
-      override def getClasspath: String = valueOrElse(System.getProperty("surefire.test.class.path")) {
-        super.getClasspath
-      }
+      override def getClasspath: String = System.getProperty("surefire.test.class.path", super.getClasspath)
     }
   }
 

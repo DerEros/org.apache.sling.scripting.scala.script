@@ -3,7 +3,6 @@ package de.erna.scripting.scala.bundlefs
 import java.io.{File, IOException, InputStream}
 import java.net.URL
 
-import de.erna.scripting.scala.Utils.valueOrElse
 import org.osgi.framework.Bundle
 import org.slf4s.Logging
 
@@ -35,9 +34,7 @@ abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) e
 
   @throws(classOf[IOException])
   def container: AbstractFile =
-    valueOrElse(parent) {
-      throw new IOException("No container")
-    }
+    Option(parent).getOrElse { throw new IOException("No container") }
 
   @throws(classOf[IOException])
   def input: InputStream = {

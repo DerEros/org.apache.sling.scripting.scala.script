@@ -36,18 +36,6 @@ object Utils {
     }
 
   /**
-    * @param t       The value to return if not null
-    * @param default The default value to return if t is null
-    * @return <code>t</code> or <code>default</code> if <code>null</code>.
-    */
-  def valueOrElse[T](t: T)(default: => T): T =
-    if (t == null) {
-      default
-    } else {
-      t
-    }
-
-  /**
     * Converts a value into an Option.
     *
     * @param value The value to convert

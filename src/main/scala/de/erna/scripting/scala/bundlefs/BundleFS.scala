@@ -28,8 +28,7 @@ object BundleFS {
   /**
    * Create a new  instance representing an
    *
-    *
-   * @param bundle
+   * @param bundle The bundle to create a filesystem for
    */
   def create(bundle: Bundle): AbstractFile = {
     require(bundle != null, "bundle must not be null")

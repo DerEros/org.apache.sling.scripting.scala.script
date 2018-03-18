@@ -25,8 +25,8 @@ trait Bindings extends Map[String, AnyRef] {
 
   /**
    * Associate a value with a name
-   * @param name
-   * @param value
+   * @param name Name of the binding
+   * @param value Value of the binding
    * @return  The value which was previously associated with the
    *   given name or null if none.
    */
@@ -34,7 +34,7 @@ trait Bindings extends Map[String, AnyRef] {
 
   /**
    * @return  the value associated with the given name
-   * @param name
+   * @param name Name of the binding for which to return the value
    */
   def getValue(name: String): AnyRef =
     get(name) match {

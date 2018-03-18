@@ -43,8 +43,8 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
 
   /**
    * Same as <code>ScalaInterpreter(settings, reporter, null, outDir)</code>.
-   * @param settings
-   * @param reporter
+   * @param settings Settings for the interpreter
+   * @param reporter Reporter to use for errors and warnings
    * @return
    */
   def this(settings: Settings, reporter: Reporter) =
@@ -67,7 +67,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
    * @param code  source code of the script
    * @param bindings  bindings to be passed to the script
    * @return  a valid Scala source
-   * @throws InterpreterException
+   * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
    */
   @throws(classOf[InterpreterException])
   def preProcess(name: String, code: String, bindings: Bindings): String = {
@@ -179,7 +179,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
    * @param in  stdIn for the script execution
    * @param out  stdOut for the script execution
    * @return  result of execution
-   * @throws InterpreterException
+   * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
    */
   @throws(classOf[InterpreterException])
   def interprete(name: String, code: String, bindings: Bindings, in: Option[InputStream],
@@ -198,7 +198,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
    * @param code  source code
    * @param bindings  variable bindings to pass to the script
    * @return  result of execution
-   * @throws InterpreterException
+   * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
    */
   @throws(classOf[InterpreterException])
   def interprete(name: String, code: String, bindings: Bindings): Reporter =
@@ -212,7 +212,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
    * @param in  stdIn for the script execution
    * @param out  stdOut for the script execution
    * @return  result of execution
-   * @throws InterpreterException
+   * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
    */
   @throws(classOf[InterpreterException])
   def interprete(name: String, code: String, bindings: Bindings, in: InputStream,
@@ -227,7 +227,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
    * @param in  stdIn for the script execution
    * @param out  stdOut for the script execution
    * @return  result of execution
-   * @throws InterpreterException
+   * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
    */
   @throws(classOf[InterpreterException])
   def interprete(name: String, source: AbstractFile, bindings: Bindings, in: Option[InputStream],
@@ -246,7 +246,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
    * @param source source file
    * @param bindings  variable bindings to pass to the script
    * @return  result of execution
-   * @throws InterpreterException
+   * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
    */
   @throws(classOf[InterpreterException])
   def interprete(name: String, source: AbstractFile, bindings: Bindings): Reporter =
@@ -260,7 +260,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
    * @param in  stdIn for the script execution
    * @param out  stdOut for the script execution
    * @return  result of execution
-   * @throws InterpreterException
+   * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
    */
   @throws(classOf[InterpreterException])
   def interprete(name: String, source: AbstractFile, bindings: Bindings, in: InputStream,

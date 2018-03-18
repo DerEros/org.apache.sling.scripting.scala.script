@@ -23,8 +23,8 @@ object Utils {
 
   /**
    * Evaluate <code>f</code> on <code>s</code> if <code>s</code> is not null.
-   * @param s
-   * @param f
+   * @param s The value to apply f on
+   * @param f The function to apply on s
    * @return <code>f(s)</code> if s is not <code>null</code>, <code>null</code> otherwise.
    */
   def nullOrElse[S, T](s: S)(f: S => T): T =
@@ -32,8 +32,8 @@ object Utils {
     else f(s)
 
   /**
-   * @param t
-   * @param default
+   * @param t The value to return if not null
+   * @param default The default value to return if t is null
    * @return <code>t</code> or <code>default</code> if <code>null</code>.
    */
   def valueOrElse[T](t: T)(default: => T): T =
@@ -42,7 +42,7 @@ object Utils {
 
   /**
    * Converts a value into an Option.
-   * @param value
+   * @param value The value to convert
    * @return <code>Some(value)</code> if value is not <code>null</code>,
    * <code>None</code> otherwise.
    */

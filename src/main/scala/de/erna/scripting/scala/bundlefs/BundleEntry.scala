@@ -43,7 +43,7 @@ abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) e
 
   /**
     * Not supported. Always throws an IOException.
-    * @throws IOException
+    * @throws IOException Always thrown
     */
   @throws(classOf[IOException])
   def output = throw new IOException("not supported: output")

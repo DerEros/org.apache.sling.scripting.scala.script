@@ -88,4 +88,22 @@ class BundleEntryTest extends FunSuite with MockitoSugar with BeforeAndAfter {
     val entry = new TestBundleEntry(bundleMock, baseUrl, parentMock, subEntry)
     assert(entry.lookupNameUnchecked("foobar", directory = false) == subEntry)
   }
+
+  test("Parse different URLs combinations") {
+    case class TestData(input: URL, expectedResult: (String, String))
+    val urlsAndExpected: Seq[TestData] =
+      TestData(new URL("http://123/foo/bar"), ("foo", "bar")) ::
+      TestData(new URL("http://123/bar"), ("", "bar")) ::
+      TestData(new URL("http://123/foo/bar/baz"), ("foo/bar", "baz")) ::
+      TestData(new URL("http://123/foo/bar/baz/"), ("foo/bar", "baz")) ::
+      TestData(new URL("http://123/foo/bar/baz///"), ("foo/bar", "baz")) ::
+      TestData(new URL("http://123/"), ("", "")) ::
+      TestData(new URL("http://123/foo//bar"), ("foo", "bar")) ::
+      Nil
+    val bundleEntry = new TestBundleEntry(bundleMock, baseUrl, parentMock)
+
+    for (TestData(url, expectedResult) <- urlsAndExpected) {
+      assert(bundleEntry.getPathAndName(url) == expectedResult)
+    }
+  }
 }

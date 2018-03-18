@@ -43,31 +43,19 @@ abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) e
 
   def delete(): Unit = unsupported()
 
-  def lookupNameUnchecked(name: String, directory: Boolean): AbstractFile = {
-    val file = lookupName(name, directory)
-    if (file == null) {
-      NoFile
-    } else {
-      file
-    }
-  }
+  def lookupNameUnchecked(name: String, directory: Boolean): AbstractFile =
+    Option(lookupName(name, directory)).getOrElse(NoFile)
 
   override def toString: String = fullName
 
   override def toURL: URL = url
 
-  private def getPathAndName(url: URL): (String, String) = {
-    val u = url.getPath
-    var k = u.length
-    while ((k > 0) && (u(k - 1) == '/')) {
-      k = k - 1
-    }
+  def getPathAndName(url: URL): (String, String) = {
+    val pathTokens = url.getPath.split("/").toList.filter(_.nonEmpty)
 
-    var j = k
-    while ((j > 0) && (u(j - 1) != '/')) {
-      j = j - 1
-    }
+    val name = pathTokens.takeRight(1).mkString("")
+    val path = pathTokens.dropRight(1).mkString("/")
 
-    (u.substring(if (j > 0) 1 else 0, if (j > 1) j - 1 else j), u.substring(j, k))
+    (path, name)
   }
 }

@@ -20,31 +20,6 @@ package de.erna.scripting.scala
   * General purpose utility functions
   */
 object Utils {
-
-  /**
-    * Evaluate <code>f</code> on <code>s</code> if <code>s</code> is not null.
-    *
-    * @param s The value to apply f on
-    * @param f The function to apply on s
-    * @return <code>f(s)</code> if s is not <code>null</code>, <code>null</code> otherwise.
-    */
-  def nullOrElse[S, T](s: S)(f: S => T): T =
-    if (s == null) {
-      null.asInstanceOf[T]
-    } else {
-      f(s)
-    }
-
-  /**
-    * Converts a value into an Option.
-    *
-    * @param value The value to convert
-    * @return <code>Some(value)</code> if value is not <code>null</code>,
-    *         <code>None</code> otherwise.
-    */
-  def option[T](value: T): Option[T] =
-    Option(value)
-
   /**
     * Converts the given identifier to a legal Java/Scala identifier
     *

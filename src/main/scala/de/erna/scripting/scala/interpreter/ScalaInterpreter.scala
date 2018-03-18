@@ -18,7 +18,6 @@ package de.erna.scripting.scala.interpreter
 
 import java.io.{InputStream, OutputStream}
 
-import de.erna.scripting.scala.Utils.option
 import org.slf4s.Logging
 
 import scala.reflect.internal.util.{AbstractFileClassLoader, BatchSourceFile, SourceFile}
@@ -97,7 +96,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
   @throws(classOf[InterpreterException])
   def interprete(name: String, code: String, bindings: Bindings, in: InputStream,
                  out: OutputStream): Reporter =
-    interprete(name, code, bindings, option(in), option(out))
+    interprete(name, code, bindings, Option(in), Option(out))
 
   /**
     * Interprete a script
@@ -254,12 +253,10 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
       reporter
     }
     catch {
-      case e: java.lang.reflect.InvocationTargetException => {
+      case e: java.lang.reflect.InvocationTargetException =>
         throw new InterpreterException("Error executing " + name, e.getTargetException)
-      }
-      case e: Exception => {
+      case e: Exception =>
         throw new InterpreterException("Error executing " + name, e)
-      }
     }
   }
 
@@ -297,7 +294,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
   @throws(classOf[InterpreterException])
   def interprete(name: String, source: AbstractFile, bindings: Bindings, in: InputStream,
                  out: OutputStream): Reporter =
-    interprete(name, source, bindings, option(in), option(out))
+    interprete(name, source, bindings, Option(in), Option(out))
 
   /**
     * Interprete a script
@@ -358,6 +355,6 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
     */
   @throws(classOf[InterpreterException])
   def execute(name: String, bindings: Bindings, in: InputStream, out: OutputStream): Reporter =
-    execute(name, bindings, option(in), option(out))
+    execute(name, bindings, Option(in), Option(out))
 
 }

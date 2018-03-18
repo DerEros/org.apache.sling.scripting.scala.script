@@ -3,9 +3,9 @@ package de.erna.scripting.scala.bundlefs
 import java.net.URL
 import java.util
 
-import de.erna.scripting.scala.Utils.nullOrElse
 import org.osgi.framework.Bundle
 
+import scala.language.postfixOps
 import scala.tools.nsc.io.AbstractFile
 
 class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(bundle, url, parent) {
@@ -80,13 +80,13 @@ class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(b
 
   def lookupName(name: String, directory: Boolean): AbstractFile = {
     val entry = bundle.getEntry(fullName + "/" + name)
-    nullOrElse(entry) { entry =>
+    Option(entry).map { entry =>
       if (directory) {
         new DirEntry(bundle, entry, DirEntry.this)
       } else {
         new FileEntry(bundle, entry, DirEntry.this)
       }
-    }
+    } orNull
   }
 
 }

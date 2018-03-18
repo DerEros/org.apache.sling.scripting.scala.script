@@ -3,34 +3,6 @@ package de.erna.scripting.scala
 import org.scalatest.FunSuite
 
 class UtilsTest extends FunSuite {
-  test("Null is returned as null") {
-    assertResult(null) {
-      Utils.nullOrElse(null) { _ => "foo" }
-    }
-  }
-
-  test("When parameter is not null, function is executed") {
-    val expected = "foobar"
-    assertResult(expected) {
-      Utils.nullOrElse("foo") {
-        _ + "bar"
-      }
-    }
-  }
-
-  test("Option creates Some when value is present") {
-    val expected = Some("foo")
-    assertResult(expected) {
-      Utils.option("foo")
-    }
-  }
-
-  test("Option creates None when value is not present") {
-    assertResult(None) {
-      Utils.option(null)
-    }
-  }
-
   test("Make identifier does not change valid identifies") {
     assertResult("FooBarIdentifier") {
       Utils.makeIdentifier("FooBarIdentifier")

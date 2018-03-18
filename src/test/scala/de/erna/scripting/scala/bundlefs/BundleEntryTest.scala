@@ -1,6 +1,5 @@
 package de.erna.scripting.scala.bundlefs
 
-import java.io.IOException
 import java.net.{URL, URLConnection, URLStreamHandler}
 
 import org.osgi.framework.Bundle
@@ -63,20 +62,20 @@ class BundleEntryTest extends FunSuite with MockitoSugar with BeforeAndAfter {
   }
 
   test("Getting output stream is not implemented") {
-    assertThrows[IOException] {
+    assertThrows[UnsupportedOperationException] {
       createBundleEntry().output
     }
   }
 
   test("Creating file is not implemented") {
     assertThrows[UnsupportedOperationException] {
-      createBundleEntry().create
+      createBundleEntry().create()
     }
   }
 
   test("Deleting file is not implemented") {
     assertThrows[UnsupportedOperationException] {
-      createBundleEntry().delete
+      createBundleEntry().delete()
     }
   }
 

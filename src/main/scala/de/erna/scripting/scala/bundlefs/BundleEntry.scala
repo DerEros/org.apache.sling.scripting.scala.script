@@ -1,6 +1,6 @@
 package de.erna.scripting.scala.bundlefs
 
-import java.io.{File, IOException, InputStream}
+import java.io.{File, IOException, InputStream, OutputStream}
 import java.net.URL
 
 import org.osgi.framework.Bundle
@@ -8,6 +8,7 @@ import org.slf4s.Logging
 
 import scala.reflect.internal.util.NoFile
 import scala.tools.nsc.io.AbstractFile
+import scala.util.Try
 
 abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) extends AbstractFile with Logging {
   require(url != null, "url must not be null")
@@ -24,13 +25,7 @@ abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) e
   /**
     * @return last modification time or 0 if not known
     */
-  def lastModified: Long =
-    try {
-      url.openConnection.getLastModified
-    }
-    catch {
-      case _: Throwable => 0
-    }
+  def lastModified: Long = Try(url.openConnection().getLastModified).getOrElse(0)
 
   @throws(classOf[IOException])
   def container: AbstractFile =
@@ -42,21 +37,11 @@ abstract class BundleEntry(val bundle: Bundle, val url: URL, parent: DirEntry) e
     url.openStream()
   }
 
-  /**
-    * Not supported. Always throws an IOException.
-    *
-    * @throws IOException Always thrown
-    */
-  @throws(classOf[IOException])
-  def output = throw new IOException("not supported: output")
+  def output: OutputStream = unsupported()
 
-  def create {
-    unsupported
-  }
+  def create(): Unit = unsupported()
 
-  def delete {
-    unsupported
-  }
+  def delete(): Unit = unsupported()
 
   def lookupNameUnchecked(name: String, directory: Boolean): AbstractFile = {
     val file = lookupName(name, directory)

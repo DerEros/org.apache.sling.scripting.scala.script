@@ -17,26 +17,26 @@
 package de.erna.scripting.scala.interpreter
 
 import java.io.ByteArrayOutputStream
-import javax.script.ScriptException
 
 import de.erna.scripting.scala.BacklogReporter
+import javax.script.ScriptException
 
 import scala.tools.nsc.Settings
 import scala.tools.nsc.io.AbstractFile
 import scala.tools.nsc.reporters.Reporter
 
 /**
- * Helper class for evaluating Scala scripts. 
- */
+  * Helper class for evaluating Scala scripts.
+  */
 class InterpreterHelper(val srcDir: AbstractFile, val outDir: AbstractFile) {
   require(srcDir != null)
   require(outDir != null)
-  
+
   val interpreter: ScalaInterpreter = createInterpreter
-  
+
   private val interpreterOut = new ByteArrayOutputStream
 
-  @throws(classOf[ScriptException]) 
+  @throws(classOf[ScriptException])
   def eval(name: String, code: String, bindings: Bindings): String = {
     try {
       interpreterOut.reset()
@@ -49,7 +49,7 @@ class InterpreterHelper(val srcDir: AbstractFile, val outDir: AbstractFile) {
     }
   }
 
-  @throws(classOf[ScriptException]) 
+  @throws(classOf[ScriptException])
   def eval(name: String, src: AbstractFile, bindings: Bindings): String = {
     try {
       interpreterOut.reset()
@@ -63,11 +63,6 @@ class InterpreterHelper(val srcDir: AbstractFile, val outDir: AbstractFile) {
   }
 
   // -----------------------------------------------------< protected >---
-  
-  protected def getSettings: Settings = new Settings()
-
-  protected def getClasspath: String = System.getProperty("java.class.path")
-  protected def getReporter(settings: Settings): Reporter = new BacklogReporter(settings)
 
   protected def createInterpreter: ScalaInterpreter = {
     val settings = getSettings
@@ -75,5 +70,11 @@ class InterpreterHelper(val srcDir: AbstractFile, val outDir: AbstractFile) {
     settings.outputDirs.setSingleOutput(outDir)
     new ScalaInterpreter(settings, getReporter(settings))
   }
+
+  protected def getSettings: Settings = new Settings()
+
+  protected def getClasspath: String = System.getProperty("java.class.path")
+
+  protected def getReporter(settings: Settings): Reporter = new BacklogReporter(settings)
 
 }

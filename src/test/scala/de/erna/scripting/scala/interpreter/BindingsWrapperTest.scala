@@ -6,7 +6,7 @@ import org.junit.Assert._
 import org.scalatest.FunSuite
 
 class BindingsWrapperTest extends FunSuite {
-  test ("Add a binding using operator") {
+  test("Add a binding using operator") {
     val bindings = Bindings()
     var m = bindings + ("foo" -> "bar")
     m = m + ("baz" -> "oof")
@@ -16,7 +16,7 @@ class BindingsWrapperTest extends FunSuite {
     assertEquals(Some("oof"), m.get("baz"))
   }
 
-  test ("Removing a binding using operator") {
+  test("Removing a binding using operator") {
     val map = new util.HashMap[String, AnyRef]()
     map.put("foo", "bar")
     map.put("baz", "oof")
@@ -27,7 +27,7 @@ class BindingsWrapperTest extends FunSuite {
     assertEquals(Some("bar"), m.get("foo"))
   }
 
-  test ("Create using Java Map") {
+  test("Create using Java Map") {
     val map = new util.HashMap[String, AnyRef]()
     map.put("foo", "bar")
     map.put("baz", "oof")

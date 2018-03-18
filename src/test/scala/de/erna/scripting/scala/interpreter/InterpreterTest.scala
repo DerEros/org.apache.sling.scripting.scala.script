@@ -26,8 +26,8 @@ import org.scalatest.{BeforeAndAfter, FunSuite}
 import scala.tools.nsc.io.PlainFile
 
 /**
- * Standard test cases where files are read/written to/from the file system.
- */  
+  * Standard test cases where files are read/written to/from the file system.
+  */
 class InterpreterTest extends FunSuite with BeforeAndAfter {
   var interpreterHelper: InterpreterHelper = _
 
@@ -35,7 +35,7 @@ class InterpreterTest extends FunSuite with BeforeAndAfter {
     val workDir = new PlainFile(new File("target")).subdirectoryNamed("tmp")
     val srcDir = workDir.subdirectoryNamed("src")
     val outDir = workDir.subdirectoryNamed("classes")
-    
+
     interpreterHelper = new InterpreterHelper(srcDir, outDir) {
       override def getClasspath: String = valueOrElse(System.getProperty("surefire.test.class.path")) {
         super.getClasspath
@@ -43,23 +43,23 @@ class InterpreterTest extends FunSuite with BeforeAndAfter {
     }
   }
 
-  test ("Use eval to run a simple script") {
+  test("Use eval to run a simple script") {
     val code = "package a { class Testi(args: TestiArgs) { print(1 + 2) }}"
     assertEquals("3", interpreterHelper.eval("a.Testi", code, Bindings()))
   }
 
-  test ("Use eval to run failing script") {
+  test("Use eval to run failing script") {
     val code = "syntax error"
     try {
       interpreterHelper.eval("a.Testi", code, Bindings())
       fail("Expecting ScriptException")
     }
     catch {
-      case _: ScriptException =>  // expected
+      case _: ScriptException => // expected
     }
   }
 
-  test ("Use eval to run script that throws error") {
+  test("Use eval to run script that throws error") {
     val err = "Some error here"
     val code = "package a { class Testi(args: TestiArgs) { throw new Error(\"" + err + "\") }}"
     try {
@@ -71,7 +71,7 @@ class InterpreterTest extends FunSuite with BeforeAndAfter {
     }
   }
 
-  test ("Use eval to run script with bindings") {
+  test("Use eval to run script with bindings") {
     val bindings = Bindings()
     val time = java.util.Calendar.getInstance.getTime
     bindings.putValue("msg", "Hello world")
@@ -81,7 +81,7 @@ class InterpreterTest extends FunSuite with BeforeAndAfter {
     assertEquals("Hello world: " + time, result)
   }
 
-  test ("Use compile and execute to run script") {
+  test("Use compile and execute to run script") {
     val srcDir = interpreterHelper.srcDir
     val interpreter = interpreterHelper.interpreter
 

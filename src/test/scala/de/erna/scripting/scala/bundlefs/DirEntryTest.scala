@@ -3,16 +3,16 @@ package de.erna.scripting.scala.bundlefs
 import java.net.URL
 import java.util
 
-import org.osgi.framework.Bundle
-import org.scalatest.{Assertion, BeforeAndAfter, FunSuite}
-import org.scalatest.mockito.MockitoSugar
 import org.junit.Assert._
-import org.mockito.Mockito._
 import org.mockito.ArgumentMatchers._
+import org.mockito.Mockito._
+import org.osgi.framework.Bundle
+import org.scalatest.mockito.MockitoSugar
+import org.scalatest.{Assertion, BeforeAndAfter, FunSuite}
 
 class DirEntryTest extends FunSuite with MockitoSugar with BeforeAndAfter {
-  var bundleMock: Bundle = _
   val baseUrl = new URL("file://123/")
+  var bundleMock: Bundle = _
   var parentMock: DirEntry = _
 
   before {
@@ -20,16 +20,8 @@ class DirEntryTest extends FunSuite with MockitoSugar with BeforeAndAfter {
     parentMock = mock[DirEntry]
   }
 
-  def as[T](item: AnyRef): T = item.asInstanceOf[T]
-
-  test("Lookup non-existing entry") {
-    when(bundleMock.getEntry(any(classOf[String]))).thenReturn(null)
-
-    val dirEntry = new DirEntry(bundleMock, baseUrl, parentMock)
-    assertNull(dirEntry.lookupName("foobar", directory = true ) )
-  }
-
-  def findSubItemTest[ExcpectedType <: BundleEntry](isDirectory: Boolean, expectedClass: Class[ExcpectedType]): Assertion = {
+  def findSubItemTest[ExcpectedType <: BundleEntry](isDirectory: Boolean,
+                                                    expectedClass: Class[ExcpectedType]): Assertion = {
     val subDirectoryUrl = new URL("file://123/foobar")
     when(bundleMock.getEntry(any(classOf[String]))).thenReturn(subDirectoryUrl)
 
@@ -42,12 +34,21 @@ class DirEntryTest extends FunSuite with MockitoSugar with BeforeAndAfter {
     assert(dirEntry == as[ExcpectedType](result).container)
   }
 
+  test("Lookup non-existing entry") {
+    when(bundleMock.getEntry(any(classOf[String]))).thenReturn(null)
+
+    val dirEntry = new DirEntry(bundleMock, baseUrl, parentMock)
+    assertNull(dirEntry.lookupName("foobar", directory = true))
+  }
+
+  def as[T](item: AnyRef): T = item.asInstanceOf[T]
+
   test("Lookup of sub-directory") {
-    findSubItemTest(isDirectory = true, classOf[DirEntry] )
+    findSubItemTest(isDirectory = true, classOf[DirEntry])
   }
 
   test("Lookup of sub-file") {
-    findSubItemTest(isDirectory = false, classOf[FileEntry] )
+    findSubItemTest(isDirectory = false, classOf[FileEntry])
   }
 
   test("Fetch bundle entry only via URL") {

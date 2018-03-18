@@ -18,10 +18,11 @@ package de.erna.scripting.scala
 
 import java.io.StringWriter
 import java.util.concurrent.Callable
-import javax.script.{ScriptContext, ScriptEngine, ScriptEngineFactory}
 
+import javax.script.{ScriptContext, ScriptEngine, ScriptEngineFactory}
 import org.junit.Assert._
 import org.scalatest.FunSuite
+
 import scala.language.implicitConversions
 
 /**
@@ -34,54 +35,15 @@ import scala.language.implicitConversions
   */
 class ScriptEngineTest extends FunSuite {
 
-  implicit def fun2Call[R](f: () => R): Callable[R] = new Callable[R] { def call: R = f() }
-
-  def getScriptEngine: ScriptEngine = {
-    import scala.collection.convert.ImplicitConversions._
-
-    val factories = javax.imageio.spi.ServiceRegistry.lookupProviders(classOf[ScriptEngineFactory])
-    val scalaEngineFactory = factories.find(_.getEngineName == "Scala Scripting Engine")
-
-    scalaEngineFactory.map(_.getScriptEngine).getOrElse(
-      throw new AssertionError("Scala Scripting Engine not found")
-    )
-  }
-
-  /**
-    *  tests a simple piece of code
-    *
-    *  this can be used as a reference for how to build a valid string that contains scala code for the ScalaScriptingEngine
-    */
-  test("Run a simple script") {
-    val scriptEngine: ScriptEngine = getScriptEngine
-
-    val code = new StringBuilder()
-    code.append("package de.erna.scripting.scala{")
-    code.append("\n")
-    code.append("class Script(args: ScriptArgs) {")
-    code.append("\n")
-    code.append("import args._")
-    code.append("\n")
-    code.append("println(\"output:\" + obj.saySomething()) ")
-    code.append("\n")
-    code.append("}}")
-
-    val say = "hello"
-
-    val b = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE)
-    b.put("obj", new TestInject(say))
-
-    val writer = new StringWriter()
-    scriptEngine.getContext.setWriter(writer)
-
-    scriptEngine.eval(code.toString(), b)
-    assertEquals("output:" + say, writer.toString.trim())
+  implicit def fun2Call[R](f: () => R): Callable[R] = new Callable[R] {
+    def call: R = f()
   }
 
   /**
     * multi-threaded test
     *
-    * the purpose of this test is to demonstrate the capabilities/faults that the current ScalaScriptingEngine implementation has.
+    * the purpose of this test is to demonstrate the capabilities/faults that the current ScalaScriptingEngine
+    * implementation has.
     */
   //TODO get this test to work again
   /*def testMultipleThreads() {
@@ -137,6 +99,49 @@ class ScriptEngineTest extends FunSuite {
 
     scriptEngine.eval(code.toString, b)
     "output:" + say == writer.toString.trim()
+  }
+
+  /**
+    * tests a simple piece of code
+    *
+    * this can be used as a reference for how to build a valid string that contains scala code for the
+    * ScalaScriptingEngine
+    */
+  test("Run a simple script") {
+    val scriptEngine: ScriptEngine = getScriptEngine
+
+    val code = new StringBuilder()
+    code.append("package de.erna.scripting.scala{")
+    code.append("\n")
+    code.append("class Script(args: ScriptArgs) {")
+    code.append("\n")
+    code.append("import args._")
+    code.append("\n")
+    code.append("println(\"output:\" + obj.saySomething()) ")
+    code.append("\n")
+    code.append("}}")
+
+    val say = "hello"
+
+    val b = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE)
+    b.put("obj", new TestInject(say))
+
+    val writer = new StringWriter()
+    scriptEngine.getContext.setWriter(writer)
+
+    scriptEngine.eval(code.toString(), b)
+    assertEquals("output:" + say, writer.toString.trim())
+  }
+
+  def getScriptEngine: ScriptEngine = {
+    import scala.collection.convert.ImplicitConversions._
+
+    val factories = javax.imageio.spi.ServiceRegistry.lookupProviders(classOf[ScriptEngineFactory])
+    val scalaEngineFactory = factories.find(_.getEngineName == "Scala Scripting Engine")
+
+    scalaEngineFactory.map(_.getScriptEngine).getOrElse(
+      throw new AssertionError("Scala Scripting Engine not found")
+    )
   }
 
   class TestInject(sayWhat: String) {

@@ -17,13 +17,14 @@ class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(b
 
   def iterator: Iterator[AbstractFile] = {
     new Iterator[AbstractFile]() {
-      val dirs: util.Enumeration[String ] = bundle.getEntryPaths(fullName )
+      val dirs: util.Enumeration[String] = bundle.getEntryPaths(fullName)
 
       var nextEntry: BundleEntry = prefetch()
 
       def hasNext: Boolean = {
-        if (nextEntry == null)
+        if (nextEntry == null) {
           nextEntry = prefetch()
+        }
 
         nextEntry != null
       }
@@ -46,40 +47,45 @@ class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(b
 
           // Bundle.getResource seems to be inconsistent with respect to requiring
           // a trailing slash
-          if (entryUrl == null)
+          if (entryUrl == null) {
             entryUrl = bundle.getResource("/" + removeTralingSlash(entry))
+          }
 
           // If still null OSGi wont let use load that resource for some reason
           if (entryUrl == null) {
             entryUrl = new URL(url.toString + entry)
           }
 
-          if (entry.endsWith(".class"))
+          if (entry.endsWith(".class")) {
             new FileEntry(bundle, entryUrl, DirEntry.this)
-          else
+          } else {
             new DirEntry(bundle, entryUrl, DirEntry.this)
+          }
         }
-        else
+        else {
           null
+        }
       }
 
       private def removeTralingSlash(s: String): String =
-        if (s == null || s.length == 0)
+        if (s == null || s.length == 0) {
           s
-        else if (s.last == '/')
+        } else if (s.last == '/') {
           removeTralingSlash(s.substring(0, s.length - 1))
-        else
+        } else {
           s
+        }
     }
   }
 
   def lookupName(name: String, directory: Boolean): AbstractFile = {
     val entry = bundle.getEntry(fullName + "/" + name)
     nullOrElse(entry) { entry =>
-      if (directory)
+      if (directory) {
         new DirEntry(bundle, entry, DirEntry.this)
-      else
+      } else {
         new FileEntry(bundle, entry, DirEntry.this)
+      }
     }
   }
 

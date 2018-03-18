@@ -6,7 +6,7 @@ import scala.reflect.internal.util.NoFile
 
 class AbstractFileClassPathTest extends FunSuite {
   test("An abstract file class path fails when querying for a package") {
-    val abstractFileClassPath = new AbstractFileClassPath(NoFile )
+    val abstractFileClassPath = new AbstractFileClassPath(NoFile)
     assertThrows[NotImplementedError] {
       abstractFileClassPath.hasPackage("foobar")
     }

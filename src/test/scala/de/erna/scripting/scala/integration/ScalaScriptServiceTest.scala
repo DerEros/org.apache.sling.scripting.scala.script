@@ -25,21 +25,23 @@ class ScalaScriptServiceTest extends JUnitSuite {
   def config(): Array[ExamOption] = {
     System.setProperty("org.ops4j.pax.logging.DefaultServiceLog.level", "ERROR")
     options(
-             mavenBundle("de.erna", "osgi-scala-scripting", "0.1.0-SNAPSHOT"),
-             mavenBundle("org.scala-lang", "scala-library", "2.12.4"),
-             mavenBundle("org.scala-lang", "scala-compiler", "2.12.4"),
-             mavenBundle("org.scala-lang", "scala-reflect", "2.12.4"),
-             mavenBundle("org.scala-lang.modules", "scala-xml_2.12", "1.0.6"),
-             mavenBundle("org.scalatest", "scalatest_2.12", "3.0.5"),
-             mavenBundle("org.scalactic", "scalactic_2.12", "3.0.5"),
-             mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.0.14"),
-             junitBundles()
-           )
+      mavenBundle("de.erna", "osgi-scala-scripting", "0.1.0-SNAPSHOT"),
+      mavenBundle("org.scala-lang", "scala-library", "2.12.4"),
+      mavenBundle("org.scala-lang", "scala-compiler", "2.12.4"),
+      mavenBundle("org.scala-lang", "scala-reflect", "2.12.4"),
+      mavenBundle("org.scala-lang.modules", "scala-xml_2.12", "1.0.6"),
+      mavenBundle("org.scalatest", "scalatest_2.12", "3.0.5"),
+      mavenBundle("org.scalactic", "scalactic_2.12", "3.0.5"),
+      mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.0.14"),
+      junitBundles()
+    )
   }
 
   @ProbeBuilder
   def probeConfig(testProbeBuilder: TestProbeBuilder): TestProbeBuilder = {
-    testProbeBuilder.setHeader("Export-Package", "de;version=1.0.0,de.erna;version=1.0.0,de.erna.scripting.scala.integration;version=1.0.0")
+    testProbeBuilder
+      .setHeader("Export-Package",
+        "de;version=1.0.0,de.erna;version=1.0.0,de.erna.scripting.scala.integration;version=1.0.0")
   }
 
   @Test(expected = classOf[ScriptException])

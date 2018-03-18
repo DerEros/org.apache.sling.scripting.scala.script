@@ -26,8 +26,8 @@ import scala.tools.nsc.util.ClassPath
 import scala.tools.nsc.{Global, Settings}
 
 /**
- * Extended Scala compiler which supports a class path with  entries.
- */
+  * Extended Scala compiler which supports a class path with  entries.
+  */
 class ScalaCompiler(settings: Settings, reporter: Reporter, classes: Array[AbstractFile])
   extends Global(settings, reporter) with Logging {
 
@@ -37,8 +37,8 @@ class ScalaCompiler(settings: Settings, reporter: Reporter, classes: Array[Abstr
       case _ => throw new Exception("Class path is not a class of 'AggregateClassPath'")
     }
 
-    val classPathNew = classPathOrig ++ classes.filter(_ != null).map(c => new AbstractFileClassPath( c ) ).toList
-    val aggregatedClassPath = AggregateClassPath.createAggregate(classPathNew.reverse:_*)
+    val classPathNew = classPathOrig ++ classes.filter(_ != null).map(c => new AbstractFileClassPath(c)).toList
+    val aggregatedClassPath = AggregateClassPath.createAggregate(classPathNew.reverse: _*)
 
     aggregatedClassPath
   }

@@ -26,10 +26,10 @@ object BacklogReporter {
 
 class BacklogReporter(val settings: Settings, size: Int) extends AbstractReporter {
   private var backLog: List[Info] = Nil
-  
+
   def this(settings: Settings) {
     this(settings, BacklogReporter.DEFAULT_SIZE)
-  } 
+  }
 
   override def reset() {
     super.reset
@@ -39,7 +39,7 @@ class BacklogReporter(val settings: Settings, size: Int) extends AbstractReporte
   override def display(pos: Position, msg: String, severity: Severity) {
     severity.count += 1
     if (size > 0) {
-      backLog = backLog:::List(new Info(pos, msg, severity))
+      backLog = backLog ::: List(new Info(pos, msg, severity))
       if (backLog.length > size) {
         backLog = backLog.tail
       }
@@ -49,33 +49,33 @@ class BacklogReporter(val settings: Settings, size: Int) extends AbstractReporte
   override def displayPrompt() {
     // empty
   }
-  
+
   override def toString: String =
     backLog.map(_.toString).mkString("\n")
 
   private class Info(pos: Position, msg: String, severity: Severity) {
-                                 
+
     override def toString: String = {
       val level = severity match {
         case INFO => "INFO "
         case WARNING => "WARNING "
-        case _ => "ERROR " 
+        case _ => "ERROR "
       }
-      
+
       val source = try {
         pos.source + " "
       }
       catch {
         case _: UnsupportedOperationException => ""
-      } 
-      
+      }
+
       val line = try {
         "line " + pos.line + " "
       }
       catch {
         case _: UnsupportedOperationException => ""
       }
-      
+
       level + source + line + ": " + msg
     }
 

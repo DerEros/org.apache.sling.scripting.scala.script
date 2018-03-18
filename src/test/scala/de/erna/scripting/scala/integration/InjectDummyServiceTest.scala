@@ -12,7 +12,7 @@ import org.ops4j.pax.exam.spi.reactors.{ExamReactorStrategy, PerMethod}
 import org.ops4j.pax.exam.{Configuration, Option => ExamOption}
 import org.scalatest.junit.JUnitSuite
 
-@RunWith(classOf[PaxExam] )
+@RunWith(classOf[PaxExam])
 @ExamReactorStrategy(Array(classOf[PerMethod]))
 class InjectDummyServiceTest extends JUnitSuite {
 

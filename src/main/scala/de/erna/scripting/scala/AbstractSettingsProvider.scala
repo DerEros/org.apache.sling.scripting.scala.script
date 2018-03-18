@@ -16,9 +16,8 @@
  */
 package de.erna.scripting.scala
 
-import javax.script.ScriptException
-
 import de.erna.scripting.scala.interpreter.ScalaInterpreter
+import javax.script.ScriptException
 import org.slf4j.LoggerFactory
 
 import scala.tools.nsc.Settings
@@ -26,15 +25,15 @@ import scala.tools.nsc.io.AbstractFile
 import scala.tools.nsc.reporters.Reporter
 
 /**
- * Abstract base implementation of a .
- */  
+  * Abstract base implementation of a .
+  */
 abstract class AbstractSettingsProvider extends SettingsProvider {
   protected var settings: Settings = {
     val settings = new Settings
     settings.usejavacp.value = true
     settings
   }
-  
+
   protected var reporter: Reporter = createReporter(settings)
   protected var classpathX: Array[AbstractFile] = Array.empty
 
@@ -43,47 +42,53 @@ abstract class AbstractSettingsProvider extends SettingsProvider {
     if (settings == null) {
       throw new IllegalArgumentException(ScalaScriptEngineFactory.SCALA_SETTINGS + " must not be null")
     }
-    
+
     if (this.settings != settings) {
       this.settings = settings
       reporter = createReporter(settings)
       true
     }
-    else false
+    else {
+      false
+    }
   }
-  
+
+  protected def createReporter(settings: Settings) =
+    new LogReporter(LoggerFactory.getLogger(classOf[ScalaInterpreter]), settings)
+
   @throws(classOf[ScriptException])
   def getSettings: Settings = settings
-  
+
   @throws(classOf[ScriptException])
   def setReporter(reporter: Reporter): Boolean = {
     if (reporter == null) {
       throw new IllegalArgumentException(ScalaScriptEngineFactory.SCALA_REPORTER + " must not be null")
     }
-    
+
     if (this.reporter != reporter) {
       this.reporter = reporter
       true
     }
-    else false
+    else {
+      false
+    }
   }
-  
+
   @throws(classOf[ScriptException])
   def getReporter: Reporter = reporter
-  
+
   @throws(classOf[ScriptException])
   def setClasspathX(classpathX: Array[AbstractFile]): Boolean = {
     if (!(this.classpathX sameElements classpathX)) {
       this.classpathX = classpathX
       true
     }
-    else false
+    else {
+      false
+    }
   }
 
   @throws(classOf[ScriptException])
   def getClasspathX: Array[AbstractFile] = classpathX
 
-  protected def createReporter(settings: Settings) = 
-    new LogReporter(LoggerFactory.getLogger(classOf[ScalaInterpreter]), settings)
-  
 }

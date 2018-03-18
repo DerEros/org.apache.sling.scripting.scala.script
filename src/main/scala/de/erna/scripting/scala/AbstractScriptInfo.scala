@@ -24,31 +24,31 @@ object AbstractScriptInfo {
 }
 
 /**
- * Abstract base implementation of .
- */
+  * Abstract base implementation of .
+  */
 abstract class AbstractScriptInfo(protected var defaultScriptClass: String) extends ScriptInfo {
-  
+
   def this() {
     this(AbstractScriptInfo.DEFAULT_SCALA_SCRIPT_CLASS)
   }
-  
+
   /**
-   * @return  {@see #DEFAULT_SCALA_SCRIPT_CLASS}
-   */
+    * @return { @see #DEFAULT_SCALA_SCRIPT_CLASS}
+    */
   def getDefaultScriptClass: String = defaultScriptClass
-                 
+
   /**
-   * @return  the value of the {@see AbstractScriptInfo.SCALA_SCRIPT_CLASS} attribute
-   *   in the <code>context</code>. 
-   */
+    * @return the value of the { @see AbstractScriptInfo.SCALA_SCRIPT_CLASS} attribute
+    *                                 in the <code>context</code>.
+    */
   @throws(classOf[ScriptException])
   def getScriptClass(script: String, context: ScriptContext): String = {
     val value = context.getAttribute(AbstractScriptInfo.SCALA_SCRIPT_CLASS)
 
     value match {
-      case v: String  => v
-      case _          => defaultScriptClass
+      case v: String => v
+      case _ => defaultScriptClass
     }
   }
-                 
+
 }

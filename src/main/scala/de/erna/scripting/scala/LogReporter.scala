@@ -25,12 +25,12 @@ class LogReporter(logger: Logger, settings: Settings) extends BacklogReporter(se
 
   override def display(pos: Position, msg: String, severity: Severity) {
     super.display(pos, msg, severity)
-    
+
     severity match {
       case INFO => logger.info(s"$msg: $pos")
       case WARNING => logger.warn(s"$msg: $pos")
       case _ => logger.error(s"$msg: $pos")
     }
   }
-  
+
 }

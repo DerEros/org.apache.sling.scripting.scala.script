@@ -28,6 +28,22 @@ class ScalaScriptServiceImpl extends ScalaScriptService with Logging {
     factory.getScriptEngine
   }
 
+  override def run(script: String, sourceBindings: Map[String, Any]): Unit = {
+    log.debug("Running script")
+    log.trace(s"Script: $script")
+    log.trace(s"Bindings: $sourceBindings")
+
+    val bindings = toBinding(sourceBindings)
+    val writer = new StringWriter()
+    val classes = getAllResources(componentContext.get.getBundleContext)
+    scriptContext.setWriter(writer)
+    scriptContext.setAttribute(SCALA_CLASSPATH_X, classes.toArray, ScriptContext.ENGINE_SCOPE)
+
+    scriptEngine.eval(script, bindings)
+
+    log.info(s"${writer.toString.trim()}")
+  }
+
   def toBinding(source: Map[String, Any]): Bindings = {
     val bindings = scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE)
     for ((key, value) <- source) bindings.put(key, value)
@@ -43,21 +59,5 @@ class ScalaScriptServiceImpl extends ScalaScriptService with Logging {
 
   def getWiredBundles(bundleContext: BundleContext): List[Bundle] = {
     bundleContext.getBundles.toList
-  }
-
-  override def run(script: String, sourceBindings: Map[String, Any]): Unit = {
-    log.debug("Running script")
-    log.trace(s"Script: $script")
-    log.trace(s"Bindings: $sourceBindings")
-
-    val bindings = toBinding(sourceBindings)
-    val writer = new StringWriter()
-    val classes = getAllResources(componentContext.get.getBundleContext)
-    scriptContext.setWriter(writer)
-    scriptContext.setAttribute(SCALA_CLASSPATH_X, classes.toArray, ScriptContext.ENGINE_SCOPE)
-
-    scriptEngine.eval(script, bindings)
-
-    log.info(s"${writer.toString.trim()}")
   }
 }

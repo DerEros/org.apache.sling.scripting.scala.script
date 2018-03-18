@@ -19,52 +19,59 @@ package de.erna.scripting.scala.interpreter
 import scala.collection._
 
 /**
- * Bindings of names to Values
- */
+  * Bindings of names to Values
+  */
 trait Bindings extends Map[String, AnyRef] {
 
   /**
-   * Associate a value with a name
-   * @param name Name of the binding
-   * @param value Value of the binding
-   * @return  The value which was previously associated with the
-   *   given name or null if none.
-   */
+    * Associate a value with a name
+    *
+    * @param name  Name of the binding
+    * @param value Value of the binding
+    * @return The value which was previously associated with the
+    *         given name or null if none.
+    */
   def putValue(name: String, value: AnyRef): AnyRef
 
   /**
-   * @return  the value associated with the given name
-   * @param name Name of the binding for which to return the value
-   */
+    * @return the value associated with the given name
+    * @param name Name of the binding for which to return the value
+    */
   def getValue(name: String): AnyRef =
     get(name) match {
       case Some(a) => a
       case None => null
     }
-  
+
   /**
-   * Calculates the views of a class. 
-   * Let <code>clazz</code> be of type <code>Clazz[T]</code> for some type T. Let S be the 
-   * smallest super type of T which is accessible. Then <code>Class[S]</code> is the head 
-   * of the result list of classes. Let further be J the set of interface implemented by 
-   * T which are not implemented by S already. For each interface I in J which has no super 
-   * type I' of I in J <code>Class[I]</code> is included in the tail of the result list of 
-   * classes.  
-   * 
-   * @param clazz  the class whos view to calculate
-   * @return  a list of Class[_] instances representing the views of <code>clazz</code>.
-   */
+    * Calculates the views of a class.
+    * Let <code>clazz</code> be of type <code>Clazz[T]</code> for some type T. Let S be the
+    * smallest super type of T which is accessible. Then <code>Class[S]</code> is the head
+    * of the result list of classes. Let further be J the set of interface implemented by
+    * T which are not implemented by S already. For each interface I in J which has no super
+    * type I' of I in J <code>Class[I]</code> is included in the tail of the result list of
+    * classes.
+    *
+    * @param clazz the class whos view to calculate
+    * @return a list of Class[_] instances representing the views of <code>clazz</code>.
+    */
   def getViews(clazz: Class[_]): List[Class[_]] = {
     def findLeastAccessibleClass(clazz: Class[_]): Class[_] = {
-      if   (accessible(clazz)) clazz
-      else findLeastAccessibleClass(clazz.getSuperclass)
+      if (accessible(clazz)) {
+        clazz
+      } else {
+        findLeastAccessibleClass(clazz.getSuperclass)
+      }
     }
-    
+
     def getInterfacesUpTo(clazz: Class[_], bound: Class[_]) = {
-      def getInterfacesUpTo(intfs: mutable.Set[Class[_]], clazz: Class[_], bound: Class[_]): mutable.Set[Class[_]] = 
-        if (clazz == bound) intfs
-        else getInterfacesUpTo(intfs ++ clazz.getInterfaces.filter(accessible), clazz.getSuperclass, bound)
-      
+      def getInterfacesUpTo(intfs: mutable.Set[Class[_]], clazz: Class[_], bound: Class[_]): mutable.Set[Class[_]] =
+        if (clazz == bound) {
+          intfs
+        } else {
+          getInterfacesUpTo(intfs ++ clazz.getInterfaces.filter(accessible), clazz.getSuperclass, bound)
+        }
+
       getInterfacesUpTo(mutable.Set.empty, clazz, bound)
     }
 
@@ -72,34 +79,39 @@ trait Bindings extends Map[String, AnyRef] {
       try {
         getClass.getClassLoader.loadClass(clazz.getName)
         (clazz.getModifiers & 1) == 1
-      } 
-      catch { case _: Throwable => false }
+      }
+      catch {
+        case _: Throwable => false
+      }
     }
-    
-    val l = findLeastAccessibleClass(clazz) 
-    var o = getInterfacesUpTo(clazz, l) 
+
+    val l = findLeastAccessibleClass(clazz)
+    var o = getInterfacesUpTo(clazz, l)
     var v = Set.empty ++ o
-    
+
     while (v.nonEmpty) {
       val w = v.find(_ => true).get
       val p = w.getInterfaces.filter(accessible)
       o = o -- p
       v = v - w ++ p
     }
-    
-    l::o.toList
-  } 
+
+    l :: o.toList
+  }
 }
 
 /**
- * Default implementation of  backed by a mutable Map
- */
+  * Default implementation of  backed by a mutable Map
+  */
 private class BindingsWrapper(map: mutable.Map[String, AnyRef]) extends Bindings {
-  def + [B >: AnyRef] (kv: (String, B)): mutable.Map[String, B] = map + kv
-  def - (key: String): mutable.Map[String, AnyRef] = map - key
-  
+  def +[B >: AnyRef](kv: (String, B)): mutable.Map[String, B] = map + kv
+
+  def -(key: String): mutable.Map[String, AnyRef] = map - key
+
   override def size: Int = map.size
+
   override def get(name: String): Option[AnyRef] = map.get(name)
+
   override def iterator: Iterator[(String, AnyRef)] = map.iterator
 
   def putValue(name: String, value: AnyRef): AnyRef =
@@ -110,10 +122,13 @@ private class BindingsWrapper(map: mutable.Map[String, AnyRef]) extends Bindings
 }
 
 object Bindings {
+
   import scala.collection.convert.ImplicitConversions._
 
   def apply(): Bindings = new BindingsWrapper(new mutable.HashMap)
+
   def apply(map: mutable.Map[String, AnyRef]): Bindings = new BindingsWrapper(map)
+
   def apply(map: java.util.Map[String, AnyRef]): Bindings = new BindingsWrapper(map)
 }
 

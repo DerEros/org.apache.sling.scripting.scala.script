@@ -5,6 +5,8 @@
         <provide interface="javax.script.ScriptEngineFactory"/>
     </service>
     <!--<property name="service.pid" value="de.erna.scripting.scala.ScalaScriptEngineFactory"/>-->
-    <reference name="settingsProvider" interface="de.erna.scripting.scala.SettingsProvider" cardinality="0..1" policy="dynamic" bind="setSettingsProvider" unbind="unsetSettingsProvider"/>
-    <reference name="scriptInfo" interface="de.erna.scripting.scala.ScriptInfo" cardinality="0..1" policy="dynamic" bind="setScriptInfo" unbind="unsetScriptInfo"/>
+    <reference name="settingsProvider" interface="de.erna.scripting.scala.SettingsProvider" cardinality="0..1"
+               policy="dynamic" bind="setSettingsProvider" unbind="unsetSettingsProvider"/>
+    <reference name="scriptInfo" interface="de.erna.scripting.scala.ScriptInfo" cardinality="0..1" policy="dynamic"
+               bind="setScriptInfo" unbind="unsetScriptInfo"/>
 </component>

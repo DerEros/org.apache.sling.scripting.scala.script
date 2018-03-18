@@ -12,7 +12,8 @@ public class PrivateContainer {
     }
 
     private class PrivateClass extends BaseClass implements PublicInterface {
-        public PrivateClass() {}
+        public PrivateClass() {
+        }
 
         public String getName() {
             return "derived";

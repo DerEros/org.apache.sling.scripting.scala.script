@@ -1,7 +1,7 @@
 package de.erna.scripting.scala.interpreter
 
 object ScriptHelper {
-  val NL: String = System.getProperty("line.separator" )
+  val NL: String = System.getProperty("line.separator")
 
   def wrapScript(statements: String*): String = {
     s"""

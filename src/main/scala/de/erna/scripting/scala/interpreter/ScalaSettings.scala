@@ -19,13 +19,14 @@ package de.erna.scripting.scala.interpreter
 import scala.tools.nsc.Settings
 
 /**
- * Utility to parse Scala compiler settings from a string. This class
- * can be used from Java instead of Settings. Settings is not accessible
- * from Java since scala.Nothing is not visible exposed. 
- * See https://lampsvn.epfl.ch/trac/scala/ticket/1254
- */  
+  * Utility to parse Scala compiler settings from a string. This class
+  * can be used from Java instead of Settings. Settings is not accessible
+  * from Java since scala.Nothing is not visible exposed.
+  * See https://lampsvn.epfl.ch/trac/scala/ticket/1254
+  */
 class ScalaSettings(error: String => Unit) extends Settings(error) {
   def this() = this(Console.println)
+
   def parse(line: String): List[String] = parseParams(splitParams(line))
 }
 

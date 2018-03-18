@@ -21,15 +21,15 @@ import org.osgi.framework.Bundle
 import scala.tools.nsc.io.AbstractFile
 
 /**
- * Implementation of  on top of a
+  * Implementation of  on top of a
   */
 object BundleFS {
 
   /**
-   * Create a new  instance representing an
-   *
-   * @param bundle The bundle to create a filesystem for
-   */
+    * Create a new  instance representing an
+    *
+    * @param bundle The bundle to create a filesystem for
+    */
   def create(bundle: Bundle): AbstractFile = {
     require(bundle != null, "bundle must not be null")
 

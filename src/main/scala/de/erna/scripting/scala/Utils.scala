@@ -17,63 +17,78 @@
 package de.erna.scripting.scala
 
 /**
- * General purpose utility functions
- */
+  * General purpose utility functions
+  */
 object Utils {
 
   /**
-   * Evaluate <code>f</code> on <code>s</code> if <code>s</code> is not null.
-   * @param s The value to apply f on
-   * @param f The function to apply on s
-   * @return <code>f(s)</code> if s is not <code>null</code>, <code>null</code> otherwise.
-   */
+    * Evaluate <code>f</code> on <code>s</code> if <code>s</code> is not null.
+    *
+    * @param s The value to apply f on
+    * @param f The function to apply on s
+    * @return <code>f(s)</code> if s is not <code>null</code>, <code>null</code> otherwise.
+    */
   def nullOrElse[S, T](s: S)(f: S => T): T =
-    if (s == null) null.asInstanceOf[T]
-    else f(s)
+    if (s == null) {
+      null.asInstanceOf[T]
+    } else {
+      f(s)
+    }
 
   /**
-   * @param t The value to return if not null
-   * @param default The default value to return if t is null
-   * @return <code>t</code> or <code>default</code> if <code>null</code>.
-   */
+    * @param t       The value to return if not null
+    * @param default The default value to return if t is null
+    * @return <code>t</code> or <code>default</code> if <code>null</code>.
+    */
   def valueOrElse[T](t: T)(default: => T): T =
-    if (t == null) default
-    else t
+    if (t == null) {
+      default
+    } else {
+      t
+    }
 
   /**
-   * Converts a value into an Option.
-   * @param value The value to convert
-   * @return <code>Some(value)</code> if value is not <code>null</code>,
-   * <code>None</code> otherwise.
-   */
+    * Converts a value into an Option.
+    *
+    * @param value The value to convert
+    * @return <code>Some(value)</code> if value is not <code>null</code>,
+    *         <code>None</code> otherwise.
+    */
   def option[T](value: T): Option[T] =
     Option(value)
 
   /**
-   * Converts the given identifier to a legal Java/Scala identifier
-   * @param identifier Identifier to convert
-   * @return Legal Java/Scala identifier corresponding to the given identifier
-   */
+    * Converts the given identifier to a legal Java/Scala identifier
+    *
+    * @param identifier Identifier to convert
+    * @return Legal Java/Scala identifier corresponding to the given identifier
+    */
   def makeIdentifier(identifier: String): String = {
     val id = new StringBuilder(identifier.length)
-    if (!Character.isJavaIdentifierStart(identifier.charAt(0))) 
+    if (!Character.isJavaIdentifierStart(identifier.charAt(0))) {
       id.append('_')
-    
-    for (ch <- identifier) {
-      if (Character.isJavaIdentifierPart(ch) && ch != '_') id.append(ch)
-      else if (ch == '.') id.append('_')
-      else id.append(mangleChar(ch))
     }
-        
-    if (isKeyword(id.toString)) 
+
+    for (ch <- identifier) {
+      if (Character.isJavaIdentifierPart(ch) && ch != '_') {
+        id.append(ch)
+      } else if (ch == '.') {
+        id.append('_')
+      } else {
+        id.append(mangleChar(ch))
+      }
+    }
+
+    if (isKeyword(id.toString)) {
       id.append('_')
+    }
 
     id.toString
   }
 
   /**
-   * Mangle the specified character to create a legal Java/Scala class name.
-   */
+    * Mangle the specified character to create a legal Java/Scala class name.
+    */
   def mangleChar(ch: Char): StringBuilder = {
     val result = new StringBuilder("01234")
     result(0) = '_'
@@ -85,10 +100,10 @@ object Utils {
   }
 
   /**
-   * Test whether the argument is a Scala/Java keyword
-   */
+    * Test whether the argument is a Scala/Java keyword
+    */
   def isKeyword(token: String): Boolean =
-    Set (
+    Set(
       "abstract", "assert", "boolean", "break", "byte", "case", "catch",
       "char", "class", "const", "continue", "default", "do", "double",
       "else", "enum", "extends", "final", "finally", "float", "for",
@@ -97,10 +112,10 @@ object Utils {
       "protected", "public", "return", "short", "static", "strictfp",
       "super", "switch", "synchronized", "this", "throws", "transient",
       "try", "void", "volatile", "while", "true", "false", "null",
-      "forSome", "type", "var", "val", "def", "with", "yield", "match", 
+      "forSome", "type", "var", "val", "def", "with", "yield", "match",
       "implicit", "lazy", "override", "sealed", "trait", "object"
     ).contains(token)
-  
+
 }
 
 

@@ -16,21 +16,21 @@
  */
 package de.erna.scripting.scala
 
-import javax.script.{ScriptException, ScriptContext}
+import javax.script.{ScriptContext, ScriptException}
 
 /**
- * A ScriptInfo instance provides information about Scala scripts.
- */  
+  * A ScriptInfo instance provides information about Scala scripts.
+  */
 trait ScriptInfo {
   /**
-   * @return  the default name of the script class
-   */
+    * @return the default name of the script class
+    */
   def getDefaultScriptClass: String
-  
+
   /**
-   * @return  the name of the script class ofr the passed <code>script</code> in 
-   *   the given <code>context</code>. 
-   */
+    * @return the name of the script class ofr the passed <code>script</code> in
+    *         the given <code>context</code>.
+    */
   @throws(classOf[ScriptException])
   def getScriptClass(script: String, context: ScriptContext): String
 }

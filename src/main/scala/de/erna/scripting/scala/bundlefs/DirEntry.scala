@@ -26,29 +26,23 @@ import scala.tools.nsc.io.AbstractFile
 
 class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(bundle, url, parent) {
 
-  /**
-    * @return true
-    */
   def isDirectory: Boolean = true
 
   def iterator: Iterator[AbstractFile] = {
     new Iterator[AbstractFile]() {
-      val dirs: util.Enumeration[String] = bundle.getEntryPaths(fullName)
+      val dirsOpt: Option[util.Enumeration[String]] = Option(bundle.getEntryPaths(fullName))
 
-      var nextEntry: BundleEntry = prefetch()
+      var nextEntry: Option[BundleEntry] = prefetch()
 
       def hasNext: Boolean = {
-        if (nextEntry == null) {
-          nextEntry = prefetch()
-        }
-
-        nextEntry != null
+        nextEntry = nextEntry.orElse(prefetch())
+        nextEntry.isDefined
       }
 
       def next(): BundleEntry = {
         if (hasNext) {
-          val entry = nextEntry
-          nextEntry = null
+          val entry = nextEntry.get
+          nextEntry = None
           entry
         }
         else {
@@ -56,32 +50,22 @@ class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(b
         }
       }
 
-      private def prefetch() = {
-        if (dirs != null && dirs.hasMoreElements) {
-          val entry = dirs.nextElement
-          var entryUrl = bundle.getResource("/" + entry)
+      private def prefetch(): Option[BundleEntry] = {
+        for (dirs <- dirsOpt if dirs.hasMoreElements;
+             entryUrl <- findEntryUrl(dirs.nextElement())) yield {
 
-          // Bundle.getResource seems to be inconsistent with respect to requiring
-          // a trailing slash
-          if (entryUrl == null) {
-            entryUrl = bundle.getResource("/" + removeTralingSlash(entry))
-          }
-
-          // If still null OSGi wont let use load that resource for some reason
-          if (entryUrl == null) {
-            entryUrl = new URL(url.toString + entry)
-          }
-
-          if (entry.endsWith(".class")) {
+          if (isClass(entryUrl.getPath)) {
             new FileEntry(bundle, entryUrl, DirEntry.this)
           } else {
             new DirEntry(bundle, entryUrl, DirEntry.this)
           }
         }
-        else {
-          null
-        }
       }
+
+      private def findEntryUrl(entry: String): Option[URL] =
+        Option(bundle.getResource("/" + entry))
+          .orElse(Option(bundle.getResource("/" + removeTralingSlash(entry))))
+          .orElse(Option(new URL(url.toString + entry)))
 
       private def removeTralingSlash(s: String): String =
         if (s == null || s.length == 0) {
@@ -91,6 +75,8 @@ class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(b
         } else {
           s
         }
+
+      private def isClass(entry: String) = entry.endsWith(".class")
     }
   }
 

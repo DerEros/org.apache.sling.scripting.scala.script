@@ -170,7 +170,7 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
             "]"
           }
 
-      "    lazy val " + arg._1 + " = bindings.getValue(\"" + arg._1 + "\").asInstanceOf[" + className + "]" + NL +
+      "    lazy val " + arg._1 + " = bindings.get(\"" + arg._1 + "\").get.asInstanceOf[" + className + "]" + NL +
       implicits.mkString(NL)
     }
 

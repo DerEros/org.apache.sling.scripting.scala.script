@@ -21,6 +21,7 @@ import java.util
 
 import org.osgi.framework.Bundle
 
+import scala.annotation.tailrec
 import scala.language.postfixOps
 import scala.tools.nsc.io.AbstractFile
 
@@ -67,14 +68,13 @@ class DirEntry(bundle: Bundle, url: URL, parent: DirEntry) extends BundleEntry(b
           .orElse(Option(bundle.getResource("/" + removeTralingSlash(entry))))
           .orElse(Option(new URL(url.toString + entry)))
 
-      private def removeTralingSlash(s: String): String =
-        if (s == null || s.length == 0) {
-          s
-        } else if (s.last == '/') {
-          removeTralingSlash(s.substring(0, s.length - 1))
-        } else {
-          s
+      @tailrec
+      private def removeTralingSlash(s: String): String = {
+        Option(s) match {
+          case Some(string) if string.endsWith("/") => removeTralingSlash(string.stripSuffix("/"))
+          case _ => s
         }
+      }
 
       private def isClass(entry: String) = entry.endsWith(".class")
     }

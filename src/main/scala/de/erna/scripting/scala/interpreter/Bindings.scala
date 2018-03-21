@@ -16,7 +16,9 @@
  */
 package de.erna.scripting.scala.interpreter
 
+import scala.annotation.tailrec
 import scala.collection._
+import scala.util.Try
 
 /**
   * Bindings of names to Values
@@ -34,16 +36,6 @@ trait Bindings extends Map[String, AnyRef] {
   def putValue(name: String, value: AnyRef): AnyRef
 
   /**
-    * @return the value associated with the given name
-    * @param name Name of the binding for which to return the value
-    */
-  def getValue(name: String): AnyRef =
-    get(name) match {
-      case Some(a) => a
-      case None => null
-    }
-
-  /**
     * Calculates the views of a class.
     * Let <code>clazz</code> be of type <code>Clazz[T]</code> for some type T. Let S be the
     * smallest super type of T which is accessible. Then <code>Class[S]</code> is the head
@@ -56,6 +48,7 @@ trait Bindings extends Map[String, AnyRef] {
     * @return a list of Class[_] instances representing the views of <code>clazz</code>.
     */
   def getViews(clazz: Class[_]): List[Class[_]] = {
+    @tailrec
     def findLeastAccessibleClass(clazz: Class[_]): Class[_] = {
       if (accessible(clazz)) {
         clazz
@@ -65,6 +58,7 @@ trait Bindings extends Map[String, AnyRef] {
     }
 
     def getInterfacesUpTo(clazz: Class[_], bound: Class[_]) = {
+      @tailrec
       def getInterfacesUpTo(intfs: mutable.Set[Class[_]], clazz: Class[_], bound: Class[_]): mutable.Set[Class[_]] =
         if (clazz == bound) {
           intfs
@@ -76,27 +70,24 @@ trait Bindings extends Map[String, AnyRef] {
     }
 
     def accessible(clazz: Class[_]) = {
-      try {
+      Try {
         getClass.getClassLoader.loadClass(clazz.getName)
         (clazz.getModifiers & 1) == 1
-      }
-      catch {
-        case _: Throwable => false
-      }
+      } getOrElse false
     }
 
-    val l = findLeastAccessibleClass(clazz)
-    var o = getInterfacesUpTo(clazz, l)
-    var v = Set.empty ++ o
+    val leastAccessibleClass = findLeastAccessibleClass(clazz)
+    var interfaces = getInterfacesUpTo(clazz, leastAccessibleClass)
+    var interfacesSet = Set.empty ++ interfaces
 
-    while (v.nonEmpty) {
-      val w = v.find(_ => true).get
+    while (interfacesSet.nonEmpty) {
+      val w = interfacesSet.find(_ => true).get
       val p = w.getInterfaces.filter(accessible)
-      o = o -- p
-      v = v - w ++ p
+      interfaces = interfaces -- p
+      interfacesSet = interfacesSet - w ++ p
     }
 
-    l :: o.toList
+    leastAccessibleClass :: interfaces.toList
   }
 }
 

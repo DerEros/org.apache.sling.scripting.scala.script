@@ -92,7 +92,7 @@ trait Bindings extends Map[String, AnyRef] {
 }
 
 /**
-  * Default implementation of  backed by a mutable Map
+  * Default implementation of Bindings backed by a mutable Map
   */
 private class BindingsWrapper(map: mutable.Map[String, AnyRef]) extends Bindings {
   def +[B >: AnyRef](kv: (String, B)): mutable.Map[String, B] = map + kv

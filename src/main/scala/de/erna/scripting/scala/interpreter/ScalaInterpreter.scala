@@ -29,7 +29,7 @@ import scala.tools.nsc.{FatalError, Global, Settings}
   * An interpreter for Scala scripts. Interpretation of scripts proceeds in the following steps:
   * <ol>
   * <li>Pre-compilation: The source script is  wrapped into a wrapper which
-  * contains variable definitions of the approproate types for the passed .</li>
+  * contains variable definitions of the appropriate types for the passed .</li>
   * <li>Compilation: The resulting source code is  by the Scala compiler. </li>
   * <li>Execution: The class file is  and its main method called.</li>
   * </ol>
@@ -149,28 +149,20 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
 
     def mangle(name: String) = packetize(name).mkString("_")
 
-    def bind(arg: (String, AnyRef)) = {
-      val views = bindings.getViews(arg._2.getClass)
+    def bind(binding: (String, AnyRef)): String = {
+      val bindingName = binding._1
+      val bindingValue = binding._2
+
+      val views = bindings.getViews(bindingValue.getClass)
       val className = views.head.getName
       val implicits =
-        for {
-          view <- views.tail
-          intfName = view.getName
-          methName = mangle(className) + "2" + mangle(intfName)
-        }
-          yield {
-            "    implicit def " +
-            methName +
-            "(x: " +
-            className +
-            "): " +
-            intfName +
-            " = x.asInstanceOf[" +
-            intfName +
-            "]"
+        for {view <- views.tail} yield {
+          val interfaceName = view.getName
+          val methodName = mangle(className) + "2" + mangle(interfaceName)
+          s"    implicit def $methodName(x: $className): $interfaceName = x.asInstanceOf[$interfaceName]"
           }
 
-      "    lazy val " + arg._1 + " = bindings.get(\"" + arg._1 + "\").get.asInstanceOf[" + className + "]" + NL +
+      s"    lazy val $bindingName = bindings.get(\"$bindingValue\").get.asInstanceOf[$className] $NL" +
       implicits.mkString(NL)
     }
 

@@ -20,7 +20,7 @@ package de.erna.scripting.scala.interpreter
   * Exception thrown by  in case of errors.
   */
 class InterpreterException(message: String, cause: Throwable) extends Exception(message, cause) {
-  def this(cause: Throwable) = this(if (cause == null) null else cause.getMessage, cause)
+  def this(cause: Throwable) = this(Option(cause).map(_.getMessage).orNull, cause)
 
   def this(message: String) = this(message, null)
 }

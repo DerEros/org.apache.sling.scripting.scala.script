@@ -60,78 +60,6 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
     this(settings, reporter, Array.empty)
 
   /**
-    * Compiles a single source file. No pre-processing takes place.
-    *
-    * @param source source file
-    * @return result of compilation
-    */
-  def compile(source: AbstractFile): Reporter = {
-    compile(List(new BatchSourceFile(source)))
-  }
-
-  /**
-    * Same as <code>interprete(name, code, bindings, None, None)</code>.
-    *
-    * @param name     name of the script
-    * @param code     source code
-    * @param bindings variable bindings to pass to the script
-    * @return result of execution
-    * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
-    */
-  @throws(classOf[InterpreterException])
-  def interprete(name: String, code: String, bindings: Bindings): Reporter =
-    interprete(name, code, bindings, None, None)
-
-  /**
-    * Same as <code>interprete(name, code, bindings, Some(in), Some(out))</code>.
-    *
-    * @param name     name of the script
-    * @param code     source code
-    * @param bindings variable bindings to pass to the script
-    * @param in       stdIn for the script execution
-    * @param out      stdOut for the script execution
-    * @return result of execution
-    * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
-    */
-  @throws(classOf[InterpreterException])
-  def interprete(name: String, code: String, bindings: Bindings, in: InputStream,
-                 out: OutputStream): Reporter =
-    interprete(name, code, bindings, Option(in), Option(out))
-
-  /**
-    * Interprete a script
-    *
-    * @param name     name of the script
-    * @param code     source code
-    * @param bindings variable bindings to pass to the script
-    * @param in       stdIn for the script execution
-    * @param out      stdOut for the script execution
-    * @return result of execution
-    * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
-    */
-  @throws(classOf[InterpreterException])
-  def interprete(name: String, code: String, bindings: Bindings, in: Option[InputStream],
-                 out: Option[OutputStream]): Reporter = {
-    compile(name, code, bindings)
-    if (reporter.hasErrors) {
-      reporter
-    } else {
-      execute(name, bindings, in, out)
-    }
-  }
-
-  /**
-    * Pre-processes and compiles a single source file.
-    *
-    * @param name     name of the script
-    * @param code     source code
-    * @param bindings variable bindings to pass to the script
-    * @return result of compilation
-    */
-  def compile(name: String, code: String, bindings: Bindings): Reporter =
-    compile(name, preProcess(name, code, bindings))
-
-  /**
     * Generates a wrapper which contains variables declarations and implicit conversions
     * to make the bindings visible on all accessible types.
     *
@@ -197,62 +125,6 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
     "}" + NL
   }
 
-  /**
-    * Compiles a single source file. No pre-processing takes place.
-    *
-    * @param name name of the script
-    * @param code source code
-    * @return result of compilation
-    */
-  def compile(name: String, code: String): Reporter =
-    compile(List(new BatchSourceFile(name, code.toCharArray)))
-
-  /**
-    * Compiles a list of source files. No pre-processing takes place.
-    *
-    * @param sources source files
-    * @return result of compilation
-    */
-  protected def compile(sources: List[SourceFile]): Reporter = {
-    reporter.reset
-    val run = new compiler.Run
-    run.compileSources(sources)
-    reporter
-  }
-
-  /**
-    * Executes a compiled script
-    *
-    * @param name     name of the script
-    * @param bindings variable bindings to pass to the script
-    * @param in       stdIn for the script execution
-    * @param out      stdOut for the script execution
-    * @return result of execution
-    * @throws  InterpreterException when class files cannot be accessed or nor entry point is found
-    */
-  @throws(classOf[InterpreterException])
-  def execute(name: String, bindings: Bindings, in: Option[InputStream], out: Option[OutputStream]): Reporter = {
-    try {
-      val classLoader = new AbstractFileClassLoader(outputDir, parentClassLoader)
-      val script = classLoader.loadClass(name + "Runner")
-      val initMethod = script
-        .getDeclaredMethods
-        .toList
-        .find(method => method.getName == "main")
-        .get
-
-      initMethod.invoke(null, Array(bindings, in.getOrElse(java.lang.System.in),
-        out.getOrElse(java.lang.System.out)): _*)
-      reporter
-    }
-    catch {
-      case e: java.lang.reflect.InvocationTargetException =>
-        throw new InterpreterException("Error executing " + name, e.getTargetException)
-      case e: Exception =>
-        throw new InterpreterException("Error executing " + name, e)
-    }
-  }
-
   def outputDir: AbstractFile = try {
     settings.outputDirs.outputDirFor(null)
   }
@@ -289,6 +161,58 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
                  out: OutputStream): Reporter =
     interprete(name, source, bindings, Option(in), Option(out))
 
+
+  /**
+    * Same as <code>interprete(name, code, bindings, None, None)</code>.
+    *
+    * @param name     name of the script
+    * @param code     source code
+    * @param bindings variable bindings to pass to the script
+    * @return result of execution
+    * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
+    */
+  @throws(classOf[InterpreterException])
+  def interprete(name: String, code: String, bindings: Bindings): Reporter =
+    interprete(name, code, bindings, None, None)
+
+  /**
+    * Same as <code>interprete(name, code, bindings, Some(in), Some(out))</code>.
+    *
+    * @param name     name of the script
+    * @param code     source code
+    * @param bindings variable bindings to pass to the script
+    * @param in       stdIn for the script execution
+    * @param out      stdOut for the script execution
+    * @return result of execution
+    * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
+    */
+  @throws(classOf[InterpreterException])
+  def interprete(name: String, code: String, bindings: Bindings, in: InputStream,
+                 out: OutputStream): Reporter =
+    interprete(name, code, bindings, Option(in), Option(out))
+
+  /**
+    * Interprete a script
+    *
+    * @param name     name of the script
+    * @param code     source code
+    * @param bindings variable bindings to pass to the script
+    * @param in       stdIn for the script execution
+    * @param out      stdOut for the script execution
+    * @return result of execution
+    * @throws InterpreterException Thrown when code cannot be interpreted or returns an error
+    */
+  @throws(classOf[InterpreterException])
+  def interprete(name: String, code: String, bindings: Bindings, in: Option[InputStream],
+                 out: Option[OutputStream]): Reporter = {
+    compile(name, code, bindings)
+    if (reporter.hasErrors) {
+      reporter
+    } else {
+      execute(name, bindings, in, out)
+    }
+  }
+
   /**
     * Interprete a script
     *
@@ -315,6 +239,17 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
     * Pre-processes and compiles a single source file.
     *
     * @param name     name of the script
+    * @param code     source code
+    * @param bindings variable bindings to pass to the script
+    * @return result of compilation
+    */
+  def compile(name: String, code: String, bindings: Bindings): Reporter =
+    compile(name, preProcess(name, code, bindings))
+
+  /**
+    * Pre-processes and compiles a single source file.
+    *
+    * @param name     name of the script
     * @param source   source file
     * @param bindings variable bindings to pass to the script
     * @return result of compilation
@@ -322,6 +257,40 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
   def compile(name: String, source: AbstractFile, bindings: Bindings): Reporter = {
     val code = new String(source.toByteArray)
     compile(name, preProcess(name, code, bindings))
+  }
+
+
+  /**
+    * Compiles a single source file. No pre-processing takes place.
+    *
+    * @param name name of the script
+    * @param code source code
+    * @return result of compilation
+    */
+  def compile(name: String, code: String): Reporter =
+    compile(List(new BatchSourceFile(name, code.toCharArray)))
+
+  /**
+    * Compiles a single source file. No pre-processing takes place.
+    *
+    * @param source source file
+    * @return result of compilation
+    */
+  def compile(source: AbstractFile): Reporter = {
+    compile(List(new BatchSourceFile(source)))
+  }
+
+  /**
+    * Compiles a list of source files. No pre-processing takes place.
+    *
+    * @param sources source files
+    * @return result of compilation
+    */
+  protected def compile(sources: List[SourceFile]): Reporter = {
+    reporter.reset
+    val run = new compiler.Run
+    run.compileSources(sources)
+    reporter
   }
 
   /**
@@ -350,4 +319,37 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
   def execute(name: String, bindings: Bindings, in: InputStream, out: OutputStream): Reporter =
     execute(name, bindings, Option(in), Option(out))
 
+
+  /**
+    * Executes a compiled script
+    *
+    * @param name     name of the script
+    * @param bindings variable bindings to pass to the script
+    * @param in       stdIn for the script execution
+    * @param out      stdOut for the script execution
+    * @return result of execution
+    * @throws  InterpreterException when class files cannot be accessed or nor entry point is found
+    */
+  @throws(classOf[InterpreterException])
+  def execute(name: String, bindings: Bindings, in: Option[InputStream], out: Option[OutputStream]): Reporter = {
+    try {
+      val classLoader = new AbstractFileClassLoader(outputDir, parentClassLoader)
+      val script = classLoader.loadClass(name + "Runner")
+      val initMethod = script
+        .getDeclaredMethods
+        .toList
+        .find(method => method.getName == "main")
+        .get
+
+      initMethod.invoke(null, Array(bindings, in.getOrElse(java.lang.System.in),
+        out.getOrElse(java.lang.System.out)): _*)
+      reporter
+    }
+    catch {
+      case e: java.lang.reflect.InvocationTargetException =>
+        throw new InterpreterException("Error executing " + name, e.getTargetException)
+      case e: Exception =>
+        throw new InterpreterException("Error executing " + name, e)
+    }
+  }
 }

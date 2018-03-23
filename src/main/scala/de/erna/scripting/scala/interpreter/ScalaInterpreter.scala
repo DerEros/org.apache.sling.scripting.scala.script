@@ -160,10 +160,11 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
           val interfaceName = view.getName
           val methodName = mangle(className) + "2" + mangle(interfaceName)
           s"    implicit def $methodName(x: $className): $interfaceName = x.asInstanceOf[$interfaceName]"
-          }
+        }
 
-      s"    lazy val $bindingName = bindings.get(\"$bindingValue\").get.asInstanceOf[$className] $NL" +
-      implicits.mkString(NL)
+      s"""    lazy val $bindingName = bindings.get("$bindingName").get.asInstanceOf[$className]
+         |    ${implicits.mkString(NL)}
+       """.stripMargin
     }
 
     val compounds = packetize(name)

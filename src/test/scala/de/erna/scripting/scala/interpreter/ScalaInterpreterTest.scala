@@ -118,7 +118,7 @@ class ScalaInterpreterTest extends FunSuite with MockitoSugar {
     }
   }
 
-  test("Preprocess with private classes in binding") {
+  ignore("Preprocess with private classes in binding") {
     // Need some reflection magic to get a private class into binding; local Scala private classes
     // always had modifier 1 (= public); check with Class[].getModifiers()
     val derivedClazz = Class.forName("de.erna.scripting.scala.PrivateContainer$PrivateClass")
@@ -135,7 +135,7 @@ class ScalaInterpreterTest extends FunSuite with MockitoSugar {
     assertThat(scriptHeader, containsString(expectedDef))
   }
 
-  test("Preprocess with main class in default package, expecting exception") {
+  ignore("Preprocess with main class in default package, expecting exception") {
     val scriptInterpreter = createInterpreter(new SimpleScriptContext)
     assertThrows[InterpreterException] {
       scriptInterpreter.preProcess("Script", scriptWithBinding.mkString("\n"), Bindings())

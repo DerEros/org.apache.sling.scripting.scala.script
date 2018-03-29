@@ -20,7 +20,7 @@ class PreprocessorTest extends FunSuite {
         |    }
         |
         |object FooClassRunner {
-        |    def main(bindings: de.erna.scripting.scala.interpreter.Bindings
+        |    def main(bindings: de.erna.scripting.scala.interpreter.Bindings,
         |        stdIn: java.io.InputStream,
         |        stdOut: java.io.OutputStream) {
         |            Console.withIn(stdIn) {

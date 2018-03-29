@@ -71,58 +71,12 @@ class ScalaInterpreter(settings: Settings, reporter: Reporter, classes: Array[Ab
     */
   @throws(classOf[InterpreterException])
   def preProcess(name: String, code: String, bindings: Bindings): String = {
-    val NL: String = System.getProperty("line.separator")
+    val nameComponents = name.split('.').toList
+    val packageName = nameComponents.dropRight(1).mkString(".")
+    val className = nameComponents.last
 
-    def packetize(name: String): List[String] = name.split('.').toList
-
-    def mangle(name: String) = packetize(name).mkString("_")
-
-    def bind(binding: (String, AnyRef)): String = {
-      val bindingName = binding._1
-      val bindingValue = binding._2
-
-      val views = bindings.getViews(bindingValue.getClass)
-      val className = views.head.getName
-      val implicits =
-        for {view <- views.tail} yield {
-          val interfaceName = view.getName
-          val methodName = mangle(className) + "2" + mangle(interfaceName)
-          s"    implicit def $methodName(x: $className): $interfaceName = x.asInstanceOf[$interfaceName]"
-        }
-
-      s"""    lazy val $bindingName = bindings.get("$bindingName").get.asInstanceOf[$className]
-         |    ${implicits.mkString(NL)}
-       """.stripMargin
-    }
-
-    val compounds = packetize(name)
-    val className = compounds.last
-
-    def packageDeclaration =
-      if (compounds.size > 1) {
-        compounds.init.mkString("package ", ".", "") + NL
-      } else {
-        throw new InterpreterException("Default package not allowed: " + name)
-      }
-
-    code + NL +
-    packageDeclaration + " {" + NL +
-    "  class " + className + "Args(bindings: de.erna.scripting.scala.interpreter.Bindings) { " + NL +
-    bindings.map(bind).mkString(NL) + NL +
-    "  } " + NL +
-    "  object " + className + "Runner {" + NL +
-    "    def main(bindings: de.erna.scripting.scala.interpreter.Bindings," + NL +
-    "             stdIn: java.io.InputStream," + NL +
-    "             stdOut: java.io.OutputStream) {" + NL +
-    "      Console.withIn(stdIn) {" + NL +
-    "        Console.withOut(stdOut) {" + NL +
-    "          new " + className + "(new " + className + "Args(bindings))" + NL +
-    "          stdOut.flush" + NL +
-    "        }" + NL +
-    "      }" + NL +
-    "    }" + NL +
-    "  }" + NL +
-    "}" + NL
+    val preprocessor = new DefaultPreprocessor(className, packageName, code, bindings)
+    preprocessor.wrap()
   }
 
   def outputDir: AbstractFile = try {

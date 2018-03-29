@@ -1,20 +1,23 @@
 {{ code }}
+
 package {{ packageName }} {
 
 class {{ className }}Args(bindings: de.erna.scripting.scala.interpreter.Bindings) {
-//bindings.map(bind).mkString(NL) + NL +
+    {{#bindings}}
+    lazy val {{name}} = bindings.get("{{name}}").get.asInstanceOf[{{className}}]
+    {{/bindings}}
 }
 
 object {{ className }}Runner {
-def main(bindings: de.erna.scripting.scala.interpreter.Bindings
-stdIn: java.io.InputStream,
-stdOut: java.io.OutputStream) {
-Console.withIn(stdIn) {
-Console.withOut(stdOut) {
-new {{ className }} (new {{ className }}Args(bindings))
-stdOut.flush
-}
-}
-}
-}
+    def main(bindings: de.erna.scripting.scala.interpreter.Bindings
+        stdIn: java.io.InputStream,
+        stdOut: java.io.OutputStream) {
+            Console.withIn(stdIn) {
+                Console.withOut(stdOut) {
+                    new {{ className }} (new {{ className }}Args(bindings))
+                    stdOut.flush
+                }
+            }
+        }
+    }
 }

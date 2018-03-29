@@ -24,10 +24,5 @@ class DefaultPreprocessor(className: String,
     out
   }
 
-  def renderBindings(): Iterable[String] = {
-    for ((bindingName, bindingValue) <- bindings) yield {
-      val className = bindingValue.getClass.getName
-      s"""lazy val $bindingName = bindings.get("$bindingName").get.asInstanceOf[$className]"""
-    }
-  }
+  def renderBindings(): Iterable[Binding] = bindings.map(Binding.tupled)
 }

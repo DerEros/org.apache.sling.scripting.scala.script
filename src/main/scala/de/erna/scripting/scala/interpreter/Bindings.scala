@@ -123,6 +123,9 @@ object Bindings {
   def apply(map: java.util.Map[String, AnyRef]): Bindings = new BindingsWrapper(map)
 }
 
+case class Binding(name: String, value: AnyRef) {
+  val className: String = value.getClass.getName
+}
 
 
 

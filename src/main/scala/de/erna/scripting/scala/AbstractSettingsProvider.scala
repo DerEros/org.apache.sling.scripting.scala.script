@@ -39,18 +39,15 @@ abstract class AbstractSettingsProvider extends SettingsProvider {
 
   @throws(classOf[ScriptException])
   def setScalaSettings(settings: Settings): Boolean = {
+    if (settings == this.settings) return false
+
     if (settings == null) {
       throw new IllegalArgumentException(ScalaScriptEngineFactory.SCALA_SETTINGS + " must not be null")
     }
 
-    if (this.settings != settings) {
-      this.settings = settings
-      reporter = createReporter(settings)
-      true
-    }
-    else {
-      false
-    }
+    this.settings = settings
+    reporter = createReporter(settings)
+    true
   }
 
   protected def createReporter(settings: Settings) =
@@ -61,17 +58,14 @@ abstract class AbstractSettingsProvider extends SettingsProvider {
 
   @throws(classOf[ScriptException])
   def setReporter(reporter: Reporter): Boolean = {
+    if (reporter == this.reporter) return false
+
     if (reporter == null) {
       throw new IllegalArgumentException(ScalaScriptEngineFactory.SCALA_REPORTER + " must not be null")
     }
 
-    if (this.reporter != reporter) {
-      this.reporter = reporter
-      true
-    }
-    else {
-      false
-    }
+    this.reporter = reporter
+    true
   }
 
   @throws(classOf[ScriptException])
@@ -79,16 +73,12 @@ abstract class AbstractSettingsProvider extends SettingsProvider {
 
   @throws(classOf[ScriptException])
   def setClasspathX(classpathX: Array[AbstractFile]): Boolean = {
-    if (!(this.classpathX sameElements classpathX)) {
-      this.classpathX = classpathX
-      true
-    }
-    else {
-      false
-    }
+    if (this.classpathX sameElements classpathX) return false
+
+    this.classpathX = classpathX
+    true
   }
 
   @throws(classOf[ScriptException])
   def getClasspathX: Array[AbstractFile] = classpathX
-
 }

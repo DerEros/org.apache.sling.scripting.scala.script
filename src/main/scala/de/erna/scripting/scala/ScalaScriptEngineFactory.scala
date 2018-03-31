@@ -21,6 +21,7 @@ import java.util.Collections
 
 import de.erna.scripting.scala.interpreter.ScalaInterpreter
 import javax.script.{ScriptContext, ScriptEngine, ScriptEngineFactory, ScriptException}
+import org.fusesource.scalate.TemplateEngine
 import org.slf4j.LoggerFactory
 
 import scala.tools.nsc.Settings
@@ -49,6 +50,8 @@ object ScalaScriptEngineFactory {
   * SettingsProvider are looked up and injected by the Service Component Runtime.
   */
 class ScalaScriptEngineFactory extends ScriptEngineFactory {
+  val classTemplate = "ClassTemplate.mustache"
+  val templateEngine = new TemplateEngine()
 
   import ScalaScriptEngineFactory._
 
@@ -96,32 +99,22 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
 
   def getProgram(statements: String*): String = {
     def packageOf(className: String) = {
-      val i = className.lastIndexOf('.')
-      if (i >= 0) {
-        className.substring(0, i)
-      } else {
-        null
-      }
+      val packageName = className.split('.').toList.dropRight(1).mkString(".")
+      if (packageName.isEmpty) "null" else packageName
     }
 
-    def classOf(className: String) = {
-      val i = className.lastIndexOf('.')
-      if (i == className.length()) {
-        ""
-      } else {
-        className.substring(i + 1)
-      }
-    }
+    def classOf(className: String) = className.split('.').lastOption.getOrElse("")
 
-    val qClassName = scriptInfo.getDefaultScriptClass
-    val packageName = packageOf(qClassName)
-    val className = classOf(qClassName)
+    val defaultClassName = scriptInfo.getDefaultScriptClass
+    val parameters = Map(
+      "packageName" -> packageOf(defaultClassName),
+      "className" -> classOf(defaultClassName),
+      "statements" -> statements
+    )
 
-    "package " + packageName + " {" + NL +
-    "  class " + className + "(args: " + className + "Args) {" + NL +
-    statements.mkString(NL) +
-    "  }" + NL +
-    "}" + NL
+    val l = templateEngine.layout(classTemplate, parameters)
+    println(l)
+    l
   }
 
   def getScriptEngine: ScriptEngine =
@@ -159,25 +152,22 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
   @throws(classOf[ScriptException])
   def getScalaInterpreter(context: ScriptContext): ScalaInterpreter = {
     context.getAttribute(SCALA_SETTINGS) match {
-      case settings: Settings => {
+      case settings: Settings =>
         if (settingsProvider.setScalaSettings(settings)) scalaInterpreter = null
-      }
 
       case x => if (x != null) log.warn("Invalid settings: {}", x);
     }
 
     context.getAttribute(SCALA_REPORTER) match {
-      case reporter: Reporter => {
+      case reporter: Reporter =>
         if (settingsProvider.setReporter(reporter)) scalaInterpreter = null
-      }
 
       case x => if (x != null) log.warn("Invalid reporter: {}", x);
     }
 
     context.getAttribute(SCALA_CLASSPATH_X) match {
-      case classpath: Array[AbstractFile] => {
+      case classpath: Array[AbstractFile] =>
         if (settingsProvider.setClasspathX(classpath)) scalaInterpreter = null
-      }
 
       case x => if (x != null) log.warn("Invalid classpathx: {}", x);
     }

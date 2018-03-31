@@ -16,7 +16,11 @@
  */
 package de.erna.scripting.scala.interpreter
 
+import de.erna.scripting.scala.Utils.makeIdentifier
+import org.slf4s.Logging
+
 import scala.annotation.tailrec
+import scala.collection.JavaConverters._
 import scala.collection._
 import scala.util.Try
 
@@ -112,7 +116,7 @@ private class BindingsWrapper(map: mutable.Map[String, AnyRef]) extends Bindings
     }
 }
 
-object Bindings {
+object Bindings extends Logging {
 
   import scala.collection.convert.ImplicitConversions._
 
@@ -121,6 +125,20 @@ object Bindings {
   def apply(map: mutable.Map[String, AnyRef]): Bindings = new BindingsWrapper(map)
 
   def apply(map: java.util.Map[String, AnyRef]): Bindings = new BindingsWrapper(map)
+
+  def apply(javaxBindings: javax.script.Bindings): Bindings = {
+    val result = apply()
+    for (binding <- javaxBindings.entrySet().asScala) {
+      val name = binding.getKey
+      val value = binding.getValue
+      if (value == null) {
+        log.debug(s"$name has null value. skipping")
+      } else {
+        result.putValue(makeIdentifier(name), value)
+      }
+    }
+    result
+  }
 }
 
 case class Binding(name: String, value: AnyRef) {

@@ -19,7 +19,6 @@ package de.erna.scripting.scala
 import java.io._
 import java.util.concurrent.locks.{ReadWriteLock, ReentrantReadWriteLock}
 
-import de.erna.scripting.scala.Utils.makeIdentifier
 import de.erna.scripting.scala.interpreter.{Bindings => ScalaBindings}
 import javax.script._
 import org.slf4j.LoggerFactory
@@ -61,49 +60,27 @@ class ScalaScriptEngine(factory: ScalaScriptEngineFactory, scriptInfo: ScriptInf
 
   import ScalaScriptEngine._
 
-  def createBindings: Bindings =
-    new SimpleBindings
+  def createBindings: Bindings = new SimpleBindings
 
-  // -----------------------------------------------------< AbstractScriptEngine >---
-
-  def getFactory: ScriptEngineFactory =
-    factory
+  def getFactory: ScriptEngineFactory = factory
 
   @throws(classOf[ScriptException])
   def eval(reader: Reader, context: ScriptContext): AnyRef = {
-    val script = new StringBuilder
     try {
-      val bufferedScript = new BufferedReader(reader)
-
-      var nextLine = bufferedScript.readLine
-      while (nextLine != null) {
-        script.append(nextLine)
-        script.append(NL)
-        nextLine = bufferedScript.readLine
-      }
+      val br = new BufferedReader(reader)
+      val script = Stream.continually(br.readLine()).takeWhile(_ != null).mkString(NL)
+      eval(script.toString, context)
     }
     catch {
       case e: IOException => throw new ScriptException(e)
     }
-
-    eval(script.toString, context)
   }
 
   @throws(classOf[ScriptException])
   def eval(script: String, context: ScriptContext): Reporter = {
     try {
       val bindings = context.getBindings(ScriptContext.ENGINE_SCOPE)
-      val scalaBindings = ScalaBindings()
-
-      import scala.collection.convert.ImplicitConversions._
-      for (key <- bindings.keySet) {
-        val value = bindings.get(key)
-        if (value == null) {
-          log.debug("{} has null value. skipping", key)
-        } else {
-          scalaBindings.putValue(makeIdentifier(key), value)
-        }
-      }
+      val scalaBindings = ScalaBindings(bindings)
 
       val scriptClass = scriptInfo.getScriptClass(script, context)
 
@@ -121,26 +98,8 @@ class ScalaScriptEngine(factory: ScalaScriptEngineFactory, scriptInfo: ScriptInf
       }
 
       result = readLocked(rwLock) {
-        val outputStream = new OutputStream {
-          val writer: Writer = context.getWriter
-
-          @throws(classOf[IOException])
-          def write(b: Int) {
-            writer.write(b)
-          }
-
-          @throws(classOf[IOException])
-          override def flush() {
-            writer.flush()
-          }
-        }
-
-        val inputStream = new InputStream {
-          val reader: Reader = context.getReader
-
-          @throws(classOf[IOException])
-          def read(): Int = reader.read()
-        }
+        val outputStream = streamToContextWriter(context)
+        val inputStream = streamFromContextReader(context)
 
         val result = interpreter.execute(scriptClass, scalaBindings, inputStream, outputStream)
         outputStream.flush()
@@ -152,6 +111,31 @@ class ScalaScriptEngine(factory: ScalaScriptEngineFactory, scriptInfo: ScriptInf
     catch {
       case e: ScriptException => throw e
       case e: Exception => throw new ScriptException("Error executing script").initCause(e)
+    }
+  }
+
+  private def streamFromContextReader(context: ScriptContext) = {
+    new InputStream {
+      val reader: Reader = context.getReader
+
+      @throws(classOf[IOException])
+      def read(): Int = reader.read()
+    }
+  }
+
+  private def streamToContextWriter(context: ScriptContext) = {
+    new OutputStream {
+      val writer: Writer = context.getWriter
+
+      @throws(classOf[IOException])
+      def write(b: Int) {
+        writer.write(b)
+      }
+
+      @throws(classOf[IOException])
+      override def flush() {
+        writer.flush()
+      }
     }
   }
 

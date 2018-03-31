@@ -99,22 +99,20 @@ class ScalaScriptEngineFactoryTest extends FunSuite with BeforeAndAfter {
 
   test("Scala script engine factory generates correct bootstrap code") {
     val expectedProgram =
-      """package de.erna.scripting.scala {
+      """package de.erna.scripting.scala{
         |  class Script(args: ScriptArgs) {
-        |shoot(rockets)  }
-        |}
-        |""".stripMargin
+        |    shoot(rockets)}
+        |}""".stripMargin
     val program = scriptEngineFactory.getProgram("shoot(rockets)")
     assertEquals(expectedProgram, program)
   }
 
   test("Scala script engine factory generates correct bootstrap code with custom script info") {
     val expectedProgram =
-      """package foo.bar {
+      """package foo.bar{
         |  class FooScript(args: FooScriptArgs) {
-        |shoot(rockets)  }
-        |}
-        |""".stripMargin
+        |    shoot(rockets)}
+        |}""".stripMargin
     val scriptInfo = new AbstractScriptInfo("foo.bar.FooScript") {}
     scriptEngineFactory.setScriptInfo(scriptInfo)
     val program = scriptEngineFactory.getProgram("shoot(rockets)")
@@ -123,11 +121,10 @@ class ScalaScriptEngineFactoryTest extends FunSuite with BeforeAndAfter {
 
   test("Scala script engine factory generates correct bootstrap code with null package") {
     val expectedProgram =
-      """package null {
+      """package null{
         |  class FooScript(args: FooScriptArgs) {
-        |shoot(rockets)  }
-        |}
-        |""".stripMargin
+        |    shoot(rockets)}
+        |}""".stripMargin
     val scriptInfo = new AbstractScriptInfo("FooScript") {}
     scriptEngineFactory.setScriptInfo(scriptInfo)
     val program = scriptEngineFactory.getProgram("shoot(rockets)")

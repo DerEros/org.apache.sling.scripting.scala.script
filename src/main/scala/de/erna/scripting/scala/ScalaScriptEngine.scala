@@ -21,12 +21,10 @@ import java.util.concurrent.locks.{ReadWriteLock, ReentrantReadWriteLock}
 
 import de.erna.scripting.scala.interpreter.{Bindings => ScalaBindings}
 import javax.script._
-import org.slf4j.LoggerFactory
 
 import scala.tools.nsc.reporters.Reporter
 
 object ScalaScriptEngine {
-  private val log = LoggerFactory.getLogger(classOf[ScalaScriptEngine])
   private val NL = System.getProperty("line.separator")
 }
 

@@ -40,7 +40,6 @@ object ScalaScriptEngineFactory {
   val MIME_TYPES: util.List[String] = Collections.singletonList("application/x-scala")
   val NAMES: util.List[String] = Collections.singletonList("scala")
   private val log = LoggerFactory.getLogger(classOf[ScalaScriptEngineFactory])
-  private val NL = System.getProperty("line.separator")
 }
 
 /**
@@ -112,13 +111,10 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
       "statements" -> statements
     )
 
-    val l = templateEngine.layout(classTemplate, parameters)
-    println(l)
-    l
+    templateEngine.layout(classTemplate, parameters)
   }
 
-  def getScriptEngine: ScriptEngine =
-    new ScalaScriptEngine(this, scriptInfo)
+  def getScriptEngine: ScriptEngine = new ScalaScriptEngine(this, scriptInfo)
 
   // -----------------------------------------------------< SCR integration >---
 
@@ -127,9 +123,7 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
       throw new IllegalArgumentException("ScriptInfo may not be null")
     }
 
-    if (scriptInfo != this.scriptInfo) {
-      this.scriptInfo = scriptInfo
-    }
+    this.scriptInfo = scriptInfo
   }
 
   def getScriptInfoProvider: ScriptInfo = scriptInfo

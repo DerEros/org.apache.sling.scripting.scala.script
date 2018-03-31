@@ -20,6 +20,19 @@ package de.erna.scripting.scala
   * General purpose utility functions
   */
 object Utils {
+  val keywords = Set(
+    "abstract", "assert", "boolean", "break", "byte", "case", "catch",
+    "char", "class", "const", "continue", "default", "do", "double",
+    "else", "enum", "extends", "final", "finally", "float", "for",
+    "goto", "if", "implements", "import", "instanceof", "int",
+    "interface", "long", "native", "new", "package", "private",
+    "protected", "public", "return", "short", "static", "strictfp",
+    "super", "switch", "synchronized", "this", "throws", "transient",
+    "try", "void", "volatile", "while", "true", "false", "null",
+    "forSome", "type", "var", "val", "def", "with", "yield", "match",
+    "implicit", "lazy", "override", "sealed", "trait", "object"
+  )
+
   /**
     * Converts the given identifier to a legal Java/Scala identifier
     *
@@ -66,19 +79,7 @@ object Utils {
     * Test whether the argument is a Scala/Java keyword
     */
   def isKeyword(token: String): Boolean =
-    Set(
-      "abstract", "assert", "boolean", "break", "byte", "case", "catch",
-      "char", "class", "const", "continue", "default", "do", "double",
-      "else", "enum", "extends", "final", "finally", "float", "for",
-      "goto", "if", "implements", "import", "instanceof", "int",
-      "interface", "long", "native", "new", "package", "private",
-      "protected", "public", "return", "short", "static", "strictfp",
-      "super", "switch", "synchronized", "this", "throws", "transient",
-      "try", "void", "volatile", "while", "true", "false", "null",
-      "forSome", "type", "var", "val", "def", "with", "yield", "match",
-      "implicit", "lazy", "override", "sealed", "trait", "object"
-    ).contains(token)
-
+    keywords.contains(token)
 }
 
 

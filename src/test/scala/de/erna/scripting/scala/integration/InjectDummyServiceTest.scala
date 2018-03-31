@@ -50,6 +50,7 @@ class InjectDummyServiceTest extends JUnitSuite {
       mavenBundle("org.scalatest", "scalatest_2.12", "3.0.5"),
       mavenBundle("org.scalactic", "scalactic_2.12", "3.0.5"),
       mavenBundle("org.apache.felix", "org.apache.felix.scr", "2.0.14"),
+      mavenBundle("org.scalatra.scalate", "scalate-core_2.12", "1.8.0"),
       junitBundles(),
       frameworkProperty("org.ops4j.pax.logging.DefaultServiceLog.level").value("ERROR"))
   }

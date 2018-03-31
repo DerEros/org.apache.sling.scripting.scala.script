@@ -59,7 +59,7 @@ class AbstractFileClassPath(abstractFile: AbstractFile) extends ClassPath with L
   override private[nsc] def sources(inPackage: String) =
     throw new NotImplementedError(s"Looking for sources in $inPackage - not implemented")
 
-  override private[nsc] def list(inPackage: String) = {
+  override private[nsc] def list(inPackage: String): ClassPathEntries = {
     log.trace(s"Listing $inPackage ${bundleString.map("in " + _).getOrElse("")}")
 
     val path = inPackage.replaceAll("\\.", "/")

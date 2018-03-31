@@ -1,6 +1,8 @@
 package de.erna.scripting.scala.interpreter
 
-import org.fusesource.scalate.TemplateEngine
+import java.io.StringWriter
+
+import com.github.mustachejava.{DefaultMustacheFactory, Mustache}
 
 /**
   * Collection of default settings and template for general purpose script running
@@ -9,19 +11,21 @@ class DefaultPreprocessor(className: String,
                           packageName: String,
                           code: String,
                           bindings: Bindings) extends Preprocessor {
+  import scala.collection.JavaConverters._
   val defaultTemplatePath = "DefaultCodeTemplate.mustache"
-  val engine = new TemplateEngine
+  val engine: Mustache = new DefaultMustacheFactory().compile(defaultTemplatePath)
 
   override def wrap(): String = {
     val data = Map(
       "className" -> className,
       "packageName" -> packageName,
       "code" -> code,
-      "bindings" -> renderBindings()
+      "bindings" -> renderBindings().toList.asJava
     )
-    val out = engine.layout(defaultTemplatePath, data)
+    val writer = new StringWriter()
+    val out = engine.execute(writer, data.asJava)
 
-    out
+    out.toString
   }
 
   def renderBindings(): Iterable[Binding] = bindings.map(Binding.tupled)

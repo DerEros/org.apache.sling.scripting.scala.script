@@ -16,12 +16,13 @@
  */
 package de.erna.scripting.scala
 
+import java.io.StringWriter
 import java.util
 import java.util.Collections
 
+import com.github.mustachejava.{DefaultMustacheFactory, Mustache}
 import de.erna.scripting.scala.interpreter.ScalaInterpreter
 import javax.script.{ScriptContext, ScriptEngine, ScriptEngineFactory, ScriptException}
-import org.fusesource.scalate.TemplateEngine
 import org.slf4j.LoggerFactory
 
 import scala.tools.nsc.Settings
@@ -49,8 +50,9 @@ object ScalaScriptEngineFactory {
   * SettingsProvider are looked up and injected by the Service Component Runtime.
   */
 class ScalaScriptEngineFactory extends ScriptEngineFactory {
+  import scala.collection.JavaConverters._
   val classTemplate = "ClassTemplate.mustache"
-  val templateEngine = new TemplateEngine()
+  val templateEngine: Mustache = new DefaultMustacheFactory().compile(classTemplate)
 
   import ScalaScriptEngineFactory._
 
@@ -111,7 +113,9 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
       "statements" -> statements
     )
 
-    templateEngine.layout(classTemplate, parameters)
+    val writer = new StringWriter()
+    templateEngine.execute(writer, parameters.asJava)
+    writer.toString
   }
 
   def getScriptEngine: ScriptEngine = new ScalaScriptEngine(this, scriptInfo)

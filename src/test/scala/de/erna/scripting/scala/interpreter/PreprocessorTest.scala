@@ -17,7 +17,7 @@ class PreprocessorTest extends FunSuite {
         |
         |class FooClassArgs(bindings: de.erna.scripting.scala.interpreter.Bindings) {
         |    lazy val foo = bindings.get("foo").get.asInstanceOf[de.erna.scripting.scala.integration.TestInject]
-        |    }
+        |}
         |
         |object FooClassRunner {
         |    def main(bindings: de.erna.scripting.scala.interpreter.Bindings,

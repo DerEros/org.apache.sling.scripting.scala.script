@@ -157,7 +157,7 @@
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Bundle-Activator>de.erna.scripting.scala.ScriptingBundleActivator</Bundle-Activator>
-                        <Embed-Dependency>slf4s-api_${scala-major.version}</Embed-Dependency>
+                        <Embed-Dependency>slf4s-api_${scala-major.version},compiler</Embed-Dependency>
                         <Embed-Transitive>true</Embed-Transitive>
                         <Service-Component>
                             OSGI-INF/dummyservice.xml,
@@ -236,9 +236,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.scalatra.scalate</groupId>
-            <artifactId>scalate-core_${scala-major.version}</artifactId>
-            <version>1.8.0</version>
+            <groupId>com.github.spullara.mustache.java</groupId>
+            <artifactId>compiler</artifactId>
+            <version>0.9.5</version>
         </dependency>
 
 

@@ -19,7 +19,6 @@ package de.erna.scripting.scala.service
 import java.io.StringWriter
 
 import de.erna.scripting.scala.ScalaScriptEngineFactory
-import de.erna.scripting.scala.ScalaScriptEngineFactory.SCALA_CLASSPATH_X
 import de.erna.scripting.scala.bundlefs.BundleFS
 import javax.script.{Bindings, ScriptContext, ScriptEngine}
 import org.osgi.framework.{Bundle, BundleContext}
@@ -53,7 +52,7 @@ class ScalaScriptServiceImpl extends ScalaScriptService with Logging {
     val writer = new StringWriter()
     val classes = getAllResources(componentContext.get.getBundleContext)
     scriptContext.setWriter(writer)
-    scriptContext.setAttribute(SCALA_CLASSPATH_X, classes.toArray, ScriptContext.ENGINE_SCOPE)
+//    scriptContext.setAttribute(SCALA_CLASSPATH_X, classes.toArray, ScriptContext.ENGINE_SCOPE)
 
     scriptEngine.eval(script, bindings)
 

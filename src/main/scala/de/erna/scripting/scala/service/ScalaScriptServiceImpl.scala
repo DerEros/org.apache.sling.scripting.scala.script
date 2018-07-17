@@ -50,9 +50,7 @@ class ScalaScriptServiceImpl extends ScalaScriptService with Logging {
 
     val bindings = toBinding(sourceBindings)
     val writer = new StringWriter()
-    val classes = getAllResources(componentContext.get.getBundleContext)
     scriptContext.setWriter(writer)
-//    scriptContext.setAttribute(SCALA_CLASSPATH_X, classes.toArray, ScriptContext.ENGINE_SCOPE)
 
     scriptEngine.eval(script, bindings)
 

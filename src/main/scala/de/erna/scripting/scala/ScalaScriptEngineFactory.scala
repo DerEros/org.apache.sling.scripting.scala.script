@@ -110,7 +110,7 @@ class ScalaScriptEngineFactory extends ScriptEngineFactory {
     val parameters = Map(
       "packageName" -> packageOf(defaultClassName),
       "className" -> classOf(defaultClassName),
-      "statements" -> statements
+      "statements" -> statements.toArray
     )
 
     val writer = new StringWriter()
